@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CDS / WCCS Engineering Tool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <h1>Chemical Supply System Tool</h1>
+  <p>CDS / WCCS Preliminary Engineering Calculator</p>
+</header>
+
+<section class="card">
+  <h2>CCBTU / CDU Utility Calculator</h2>
+
+  <label>
+    Tool Type
+    <select id="toolType">
+      <option value="CCBTU">CCBTU</option>
+      <option value="CDU">CDU</option>
+    </select>
+  </label>
+
+  <label>
+    Number of Tools
+    <input type="number" id="toolQty" value="1" min="1">
+  </label>
+
+  <label>
+    Safety Factor (%)
+    <input type="number" id="safetyFactor" value="20">
+  </label>
+
+  <button onclick="calculateUtility()">Calculate</button>
+</section>
+
+<section class="card">
+  <h2>Utility Requirement Result</h2>
+
+  <table>
+    <tr><th>Utility</th><th>Requirement</th></tr>
+    <tr><td>CDA</td><td id="cda">-</td></tr>
+    <tr><td>GN2</td><td id="gn2">-</td></tr>
+    <tr><td>UPW</td><td id="upw">-</td></tr>
+    <tr><td>EXH</td><td id="exh">-</td></tr>
+    <tr><td>Drain</td><td id="drain">-</td></tr>
+    <tr><td>Power</td><td id="power">-</td></tr>
+    <tr><td>Signal</td><td id="signal">-</td></tr>
+  </table>
+</section>
+
+<section class="card">
+  <h2>Disclaimer</h2>
+  <p>
+    This tool is for preliminary engineering reference only.
+    Final design shall be verified by detailed engineering and vendor data.
+  </p>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
