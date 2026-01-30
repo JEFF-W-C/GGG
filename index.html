@@ -2,63 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CDS / WCCS Engineering Tool</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>CDS Design Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>Chemical Supply System Tool</h1>
-  <p>CDS / WCCS Preliminary Engineering Calculator</p>
-</header>
+<h1>Micron Chemical Distribution System – Design Tool</h1>
 
-<section class="card">
-  <h2>CCBTU / CDU Utility Calculator</h2>
+<section>
+  <h2>1. Tool Flow & Diversity</h2>
 
-  <label>
-    Tool Type
-    <select id="toolType">
-      <option value="CCBTU">CCBTU</option>
-      <option value="CDU">CDU</option>
-    </select>
-  </label>
+  <label>Peak Flow per Tool (LPM)</label>
+  <input id="peakFlow" type="number" value="10">
 
-  <label>
-    Number of Tools
-    <input type="number" id="toolQty" value="1" min="1">
-  </label>
+  <label>Number of Tools</label>
+  <input id="toolCount" type="number" value="10">
 
-  <label>
-    Safety Factor (%)
-    <input type="number" id="safetyFactor" value="20">
-  </label>
+  <label>Diversity Factor</label>
+  <input id="diversity" type="number" step="0.1" value="0.6">
 
-  <button onclick="calculateUtility()">Calculate</button>
+  <button onclick="calcDesignFlow()">Calculate Design Flow</button>
+
+  <p id="designFlowResult"></p>
 </section>
 
-<section class="card">
-  <h2>Utility Requirement Result</h2>
+<section>
+  <h2>2. Pipe Sizing (Velocity ≤ 0.3 m/s)</h2>
 
-  <table>
-    <tr><th>Utility</th><th>Requirement</th></tr>
-    <tr><td>CDA</td><td id="cda">-</td></tr>
-    <tr><td>GN2</td><td id="gn2">-</td></tr>
-    <tr><td>UPW</td><td id="upw">-</td></tr>
-    <tr><td>EXH</td><td id="exh">-</td></tr>
-    <tr><td>Drain</td><td id="drain">-</td></tr>
-    <tr><td>Power</td><td id="power">-</td></tr>
-    <tr><td>Signal</td><td id="signal">-</td></tr>
-  </table>
+  <button onclick="calcPipe()">Calculate Pipe Size</button>
+  <p id="pipeResult"></p>
 </section>
 
-<section class="card">
-  <h2>Disclaimer</h2>
-  <p>
-    This tool is for preliminary engineering reference only.
-    Final design shall be verified by detailed engineering and vendor data.
-  </p>
+<section>
+  <h2>3. Cabinet CDA Demand</h2>
+
+  <label>Number of Pumps</label>
+  <input id="pumpQty" type="number" value="2">
+
+  <label>CDA per Pump (NL/min)</label>
+  <input id="cdaPerPump" type="number" value="200">
+
+  <button onclick="calcCDA()">Calculate CDA</button>
+  <p id="cdaResult"></p>
 </section>
 
-<script src="script.js"></script>
+<script src="data/constants.js"></script>
+<script src="modules/flow.js"></script>
+<script src="modules/pipe.js"></script>
+<script src="modules/utility.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
