@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIDC 廠房動態管路總圖</title>
+    <title>AIDC 廠房動態管路總圖與未來基礎設施發想</title>
     <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 載入 React 與 ReactDOM -->
@@ -18,7 +18,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // 內建圖示組件
+        // 內建圖示組件 (擴充了計算機、燈泡、溫度計、水波、重量等圖示)
         const Icon = ({ name, size = 24, className = "" }) => {
             const icons = {
                 Factory: <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>,
@@ -36,7 +36,14 @@
                 Building2: <><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></>,
                 Box: <><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></>,
                 CheckCircle2: <><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></>,
-                XCircle: <><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></>
+                XCircle: <><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></>,
+                BarChart: <><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></>,
+                Cpu: <><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></>,
+                Calculator: <><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="10" y2="10"/><line x1="16" x2="16" y1="14" y2="14"/><line x1="16" x2="16" y1="18" y2="18"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></>,
+                Lightbulb: <><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></>,
+                Thermometer: <><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></>,
+                Waves: <><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.6 2 5.2 2 2.5 0 2.5-2 5.2-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.6 2 5.2 2 2.5 0 2.5-2 5.2-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.6 2 5.2 2 2.5 0 2.5-2 5.2-2 1.3 0 1.9.5 2.5 1"/></>,
+                Weight: <><circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.46A2 2 0 0 0 17.5 8Z"/></>
             };
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -46,8 +53,11 @@
         };
 
         const App = () => {
+          // --- 頁籤切換狀態 (新增 'future' 頁籤) ---
+          const [mainTab, setMainTab] = useState('layout'); // 'layout' | 'report' | 'future'
+          
+          // --- 第一頁 (平面圖) 的狀態 ---
           const [activeSystem, setActiveSystem] = useState('all');
-
           const systems = [
             { id: 'cooling', name: '冷卻動態路徑 (CWS/PCW/TCS)', color: 'border-blue-500', text: 'text-blue-400', bg: 'bg-blue-600' },
             { id: 'power', name: '電力動態路徑 (Busway)', color: 'border-yellow-500', text: 'text-yellow-400', bg: 'bg-yellow-600' },
@@ -55,21 +65,13 @@
           ];
 
           return (
-            <div className="flex flex-col gap-6 p-6 bg-slate-100 min-h-screen font-sans text-slate-800">
+            <div className="flex flex-col min-h-screen bg-slate-50 font-sans text-slate-800">
               
+              {/* 共用全局 CSS 動畫 */}
               <style dangerouslySetInnerHTML={{__html: `
-                @keyframes flow {
-                  from { stroke-dashoffset: 40; }
-                  to { stroke-dashoffset: 0; }
-                }
-                @keyframes flow-reverse {
-                  from { stroke-dashoffset: 0; }
-                  to { stroke-dashoffset: 40; }
-                }
-                @keyframes spin-slow {
-                  from { transform: rotate(0deg); }
-                  to { transform: rotate(360deg); }
-                }
+                @keyframes flow { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
+                @keyframes flow-reverse { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 40; } }
+                @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                 .animate-flow-fast { animation: flow 0.5s linear infinite; }
                 .animate-flow-normal { animation: flow 1s linear infinite; }
                 .animate-flow-slow { animation: flow 2s linear infinite; }
@@ -81,360 +83,701 @@
                 .glow-red { filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8)); }
               `}} />
 
-              <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-300 pb-4">
-                <div>
-                  <h1 className="text-3xl font-black text-slate-900 flex items-center gap-3">
-                    <Icon name="Factory" className="text-indigo-600" size={32} /> AIDC 廠房動態管路總圖
-                  </h1>
-                  <p className="text-slate-600 mt-2 font-medium">
-                    暗黑藍圖模式：展示水電分離佈線原則與動態流向，輕鬆掌握灰/白區對接介面。
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {systems.map(s => (
-                    <button 
-                      key={s.id}
-                      onClick={() => setActiveSystem(s.id)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border-2 ${activeSystem === s.id ? s.bg + ' text-white ' + s.color : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 shadow-sm'}`}
-                    >
-                      {s.name}
-                    </button>
-                  ))}
-                  <button 
-                    onClick={() => setActiveSystem('all')} 
-                    className="px-4 py-2 rounded-lg text-xs font-bold bg-slate-800 text-white border-2 border-slate-800 hover:bg-slate-700 shadow-md"
-                  >
-                    顯示全系統
-                  </button>
-                </div>
-              </header>
-
-              {/* --- 動態平面藍圖 (Dynamic Blueprint) --- */}
-              <main className="relative w-full aspect-[16/9] min-h-[600px] bg-[#0f172a] rounded-2xl shadow-2xl overflow-hidden border-4 border-slate-700 select-none">
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-
-                {/* 電力與行政區 */}
-                <div className="absolute top-0 left-0 w-[25%] h-[35%] bg-yellow-900/10 border-r border-b border-slate-700 flex flex-col p-4">
-                  <span className="text-xs font-black text-yellow-600/50 uppercase tracking-widest">Transformer Room</span>
-                </div>
-                <div className="absolute top-0 left-[25%] w-[25%] h-[35%] bg-yellow-900/5 border-r border-b border-slate-700 flex flex-col p-4">
-                  <span className="text-xs font-black text-yellow-600/50 uppercase tracking-widest">UPS & Battery</span>
-                </div>
-                <div className="absolute top-0 left-[50%] w-[50%] h-[35%] bg-slate-800/20 border-b border-slate-700 flex flex-col p-4 items-end">
-                  <span className="text-xs font-black text-slate-500 uppercase tracking-widest">NOC Control Center</span>
-                </div>
-
-                {/* 灰區與白區 */}
-                <div className="absolute top-[35%] left-0 w-[30%] h-[65%] bg-blue-900/10 border-r-2 border-slate-600 flex flex-col p-4">
-                  <span className="text-sm font-black text-blue-400/50 uppercase tracking-widest mb-1">Gray Space</span>
-                  <span className="text-[10px] text-slate-500">Mechanical & Pumping</span>
-                </div>
-                <div className="absolute top-[35%] left-[30%] w-[70%] h-[65%] bg-slate-900 flex flex-col p-6">
-                  <span className="text-xl font-black text-slate-700 uppercase tracking-[0.5em] text-center w-full absolute top-8 left-0">White Space (IT Hall)</span>
-                </div>
-
-                {/* 實體設備 */}
-                <div className="absolute left-[12.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg">
-                  <Icon name="Zap" size={24} className="mb-1" />
-                  <span className="text-[9px] font-bold">Main TX</span>
-                </div>
-
-                <div className="absolute left-[37.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-32 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg p-2">
-                  <span className="text-[9px] font-bold mb-1">UPS Bank</span>
-                  <div className="flex gap-1 w-full h-full">
-                    {[1,2,3,4].map(i => <div key={i} className="flex-1 bg-yellow-600/20 border border-yellow-600/30 rounded-sm"></div>)}
+              {/* 頂部全局導航列 (Tab 導航) */}
+              <nav className="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-6">
+                  <div className="flex items-center h-16 gap-8">
+                    <div className="flex items-center gap-2 font-black text-xl text-indigo-400 whitespace-nowrap">
+                      <Icon name="Factory" size={24} /> AIDC 基礎設施藍圖
+                    </div>
+                    <div className="flex gap-1 h-full pt-4 overflow-x-auto no-scrollbar">
+                      <button 
+                        onClick={() => setMainTab('layout')}
+                        className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors duration-200 whitespace-nowrap ${mainTab === 'layout' ? 'bg-slate-100 text-slate-900 border-t-4 border-indigo-500' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                      >
+                        1. AIDC 廠房動態管路總圖
+                      </button>
+                      <button 
+                        onClick={() => setMainTab('report')}
+                        className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors duration-200 whitespace-nowrap ${mainTab === 'report' ? 'bg-slate-100 text-slate-900 border-t-4 border-teal-500' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                      >
+                        2. 市場主流 AI 機櫃調查報告
+                      </button>
+                      <button 
+                        onClick={() => setMainTab('future')}
+                        className={`px-4 py-2 rounded-t-lg font-bold text-sm transition-colors duration-200 whitespace-nowrap ${mainTab === 'future' ? 'bg-slate-100 text-slate-900 border-t-4 border-amber-500' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                      >
+                        3. 重要公式及未來發想
+                      </button>
+                    </div>
                   </div>
                 </div>
+              </nav>
 
-                <div className="absolute left-[92%] top-[20%] -translate-x-1/2 -translate-y-1/2 w-24 h-16 bg-slate-800 border-2 border-green-600/50 rounded flex flex-col items-center justify-center text-green-500 z-10 shadow-lg">
-                  <Icon name="Activity" size={20} className="mb-1" />
-                  <span className="text-[9px] font-bold">Generator</span>
-                </div>
-
-                <div className="absolute left-[92%] top-[70%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-slate-800 border-2 border-blue-500/50 rounded-full flex flex-col items-center justify-center text-blue-400 z-10 shadow-lg">
-                  <Icon name="Wind" size={24} className="mb-1" />
-                  <span className="text-[9px] font-bold text-center">Cooling<br/>Tower</span>
-                </div>
-
-                <div className="absolute left-[15%] top-[55%] -translate-x-1/2 -translate-y-1/2 w-32 h-16 bg-slate-800 border-2 border-blue-500/50 rounded flex items-center justify-center gap-2 text-blue-400 z-10 shadow-lg">
-                  <Icon name="Wind" size={18} className="animate-spin-slow" />
-                  <span className="text-[10px] font-bold">Chiller Plant</span>
-                </div>
-
-                <div className="absolute left-[15%] top-[80%] -translate-x-1/2 -translate-y-1/2 w-40 h-20 bg-slate-800 border-2 border-cyan-600/50 rounded flex items-center justify-around text-cyan-400 z-10 shadow-lg p-2">
-                  <div className="flex flex-col items-center">
-                    <Icon name="Droplets" size={16} className="mb-1 text-blue-400" />
-                    <span className="text-[8px] font-bold text-white">CDU-01</span>
-                  </div>
-                  <div className="h-full w-px bg-slate-600"></div>
-                  <div className="flex flex-col items-center">
-                    <Icon name="Droplets" size={16} className="mb-1 text-cyan-400" />
-                    <span className="text-[8px] font-bold text-white">CDU-02</span>
-                  </div>
-                  <div className="absolute -top-3 right-2 bg-slate-700 text-slate-300 text-[8px] px-2 py-0.5 rounded border border-slate-600">熱交換核心</div>
-                </div>
-
-                {/* AI 機櫃群 */}
-                {[45, 60, 75].map((left, idx) => (
-                  <div key={`r1-${idx}`} className="absolute top-[60%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
-                    <Icon name="Server" size={20} className="mb-1" />
-                    <span className="text-[8px] font-mono">NVL72</span>
-                    <div className="absolute top-0 w-full h-1 bg-cyan-500/50 rounded-t"></div>
-                  </div>
-                ))}
-                {[45, 60, 75].map((left, idx) => (
-                  <div key={`r2-${idx}`} className="absolute top-[85%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
-                    <Icon name="Server" size={20} className="mb-1" />
-                    <span className="text-[8px] font-mono">NVL72</span>
-                    <div className="absolute top-0 w-full h-1 bg-cyan-500/50 rounded-t"></div>
-                  </div>
-                ))}
-
-                {/* SVG 管線路徑圖層 */}
-                <svg viewBox="0 0 1600 900" className="absolute inset-0 w-full h-full z-20 pointer-events-none">
-                  <defs>
-                    <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
-                    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
-                    <filter id="glow-yellow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
-                  </defs>
-
-                  {/* 1. 冷卻管路 */}
-                  {(activeSystem === 'all' || activeSystem === 'cooling') && (
-                    <g>
-                      <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#1e3a8a" strokeWidth="12" fill="none" opacity="0.5" strokeLinejoin="round" />
-                      <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#3b82f6" strokeWidth="4" strokeDasharray="16 16" fill="none" strokeLinejoin="round" className="animate-flow-normal glow-blue" />
-                      <text x="750" y="835" className="fill-blue-400 text-xs font-bold tracking-widest">CWS 冷凝水迴路 (Facilities)</text>
-
-                      <path d="M 240 520 L 240 680" stroke="#1d4ed8" strokeWidth="12" fill="none" opacity="0.5" />
-                      <path d="M 240 520 L 240 680" stroke="#60a5fa" strokeWidth="4" strokeDasharray="12 12" fill="none" className="animate-flow-fast glow-blue" />
-                      <text x="255" y="600" className="fill-blue-300 text-[10px] font-bold">PCW</text>
-
-                      <path d="M 300 720 L 400 720 L 400 450 L 1200 450" stroke="#083344" strokeWidth="12" fill="none" opacity="0.8" strokeLinejoin="round" />
-                      <path d="M 400 680 L 1200 680" stroke="#083344" strokeWidth="12" fill="none" opacity="0.8" />
-                      
-                      <path d="M 300 720 L 400 720 L 400 450 L 1200 450" stroke="#22d3ee" strokeWidth="4" strokeDasharray="16 16" fill="none" strokeLinejoin="round" className="animate-flow-fast glow-cyan" />
-                      <path d="M 400 680 L 1200 680" stroke="#22d3ee" strokeWidth="4" strokeDasharray="16 16" fill="none" className="animate-flow-fast glow-cyan" />
-                      
-                      {[720, 960, 1200].map(x => (
-                        <g key={`tcs-r1-${x}`}>
-                          <path d={`M ${x} 450 L ${x} 500`} stroke="#22d3ee" strokeWidth="3" fill="none" strokeDasharray="8 8" className="animate-flow-fast" />
-                        </g>
-                      ))}
-                      {[720, 960, 1200].map(x => (
-                        <g key={`tcs-r2-${x}`}>
-                          <path d={`M ${x} 680 L ${x} 720`} stroke="#22d3ee" strokeWidth="3" fill="none" strokeDasharray="8 8" className="animate-flow-fast" />
-                        </g>
-                      ))}
-
-                      <text x="500" y="435" className="fill-cyan-400 text-xs font-bold tracking-widest">TCS 伺服器技術冷卻水 (Secondary Loop Header)</text>
-                      
-                      <circle cx="480" cy="450" r="12" fill="none" stroke="#ef4444" strokeWidth="3" className="animate-pulse" />
-                      <circle cx="480" cy="680" r="12" fill="none" stroke="#ef4444" strokeWidth="3" className="animate-pulse" />
-                      <text x="495" y="470" className="fill-red-400 text-[10px] font-bold">防震穿牆封堵</text>
-                    </g>
-                  )}
-
-                  {/* 2. 電力系統 */}
-                  {(activeSystem === 'all' || activeSystem === 'power') && (
-                    <g>
-                      <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#422006" strokeWidth="10" fill="none" strokeLinejoin="round" />
-                      <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#facc15" strokeWidth="3" strokeDasharray="12 12" fill="none" strokeLinejoin="round" className="animate-flow-power glow-yellow" opacity="0.6" />
-                      <text x="800" y="50" className="fill-yellow-600 text-[10px] font-bold">Backup Power (11kV)</text>
-
-                      <path d="M 240 157 L 520 157" stroke="#854d0e" strokeWidth="12" fill="none" opacity="0.5" />
-                      <path d="M 240 157 L 520 157" stroke="#eab308" strokeWidth="6" strokeDasharray="15 15" fill="none" className="animate-flow-power glow-yellow" />
-                      <text x="320" y="145" className="fill-yellow-500 text-[10px] font-bold">Main Feeder</text>
-
-                      <path d="M 600 190 L 600 380 L 1200 380" stroke="#854d0e" strokeWidth="16" fill="none" opacity="0.4" strokeLinejoin="round" />
-                      <path d="M 600 190 L 600 380 L 1200 380" stroke="#fef08a" strokeWidth="6" strokeDasharray="20 10" fill="none" strokeLinejoin="round" className="animate-flow-power glow-yellow" />
-                      
-                      {[740, 980, 1220].map(x => (
-                        <path key={`pwr-${x}`} d={`M ${x} 380 L ${x} 500`} stroke="#fef08a" strokeWidth="2" strokeDasharray="6 6" fill="none" className="animate-flow-power" />
-                      ))}
-
-                      <text x="800" y="370" className="fill-yellow-400 text-xs font-black tracking-[0.2em] uppercase">Overhead Power Busway (匯流排)</text>
-                      
-                      <circle cx="600" cy="315" r="14" fill="none" stroke="#f59e0b" strokeWidth="3" />
-                      <text x="620" y="320" className="fill-yellow-500 text-[10px] font-bold">防火穿層 (Firestop)</text>
-                    </g>
-                  )}
-
-                  {/* 3. LDS */}
-                  {(activeSystem === 'all' || activeSystem === 'safety') && (
-                    <g>
-                      <path d="M 300 735 L 415 735 L 415 465 L 1200 465" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" strokeLinejoin="round" className="glow-red animate-pulse" />
-                      <path d="M 415 695 L 1200 695" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" className="glow-red animate-pulse" />
-                      <text x="800" y="480" className="fill-red-400 text-[10px] font-bold">LDS Sensing Cable (沿水管下方佈建)</text>
-                    </g>
-                  )}
-                </svg>
-
-              </main>
-
-              {/* 面試實戰：核心工程觀念圖解區 */}
-              <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+              <div className="p-6 max-w-[1600px] mx-auto w-full">
                 
-                {/* 原有區塊：系統佈局重點 */}
-                <div className="bg-white p-6 rounded-2xl shadow-md border border-slate-200">
-                  <h4 className="text-xl font-black text-slate-800 border-b-2 border-slate-200 pb-3 mb-5 flex items-center gap-2">
-                    <Icon name="Settings" className="text-slate-500" /> 空間與管線佈局重點
-                  </h4>
-                  <div className="space-y-6">
-                    <div className="flex gap-4">
-                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                         <Icon name="Droplets" className="text-blue-600" size={20} />
-                       </div>
-                       <div>
-                         <span className="font-bold text-slate-800 text-lg">水路配置：灰/白區的安全邊界</span>
-                         <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                           圖中藍色水路(PCW)只允許在灰區活動。透過 <strong>CDU (冷卻分配單元)</strong>，熱量被轉移，但水質被實體隔離。只有極高純度的青色水路(TCS)才能穿過紅色標示的「防震穿牆點」進入白區，保障伺服器安全。
-                         </p>
-                       </div>
-                    </div>
-                    <div className="flex gap-4">
-                       <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
-                         <Icon name="Zap" className="text-yellow-600" size={20} />
-                       </div>
-                       <div>
-                         <span className="font-bold text-slate-800 text-lg">電路配置：Busway 高密度微縮化</span>
-                         <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                           為支援高達 100kW+ 的機櫃，傳統電纜已被淘汰。圖中黃色路徑展示了 <strong>Busway (匯流排)</strong> 的走法。它通常採「上走線」，並與水管(TCS)保持絕對的立體錯位（水下、電上），避免漏水引發短路。
-                         </p>
-                       </div>
-                    </div>
-                  </div>
-                </div>
+                {/* ========================================================= */}
+                {/* ================= 第一頁：AIDC 動態平面圖 ================= */}
+                {/* ========================================================= */}
+                {mainTab === 'layout' && (
+                  <div className="flex flex-col gap-6 animate-fade-in">
+                    <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-300 pb-4">
+                      <div>
+                        <h1 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                          <Icon name="Factory" className="text-indigo-600" size={32} /> AIDC 廠房動態管路總圖
+                        </h1>
+                        <p className="text-slate-600 mt-2 font-medium">
+                          暗黑藍圖模式：展示水電分離佈線原則與動態流向，輕鬆掌握灰/白區對接介面。
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {systems.map(s => (
+                          <button 
+                            key={s.id}
+                            onClick={() => setActiveSystem(s.id)}
+                            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border-2 ${activeSystem === s.id ? s.bg + ' text-white ' + s.color : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 shadow-sm'}`}
+                          >
+                            {s.name}
+                          </button>
+                        ))}
+                        <button 
+                          onClick={() => setActiveSystem('all')} 
+                          className="px-4 py-2 rounded-lg text-xs font-bold bg-slate-800 text-white border-2 border-slate-800 hover:bg-slate-700 shadow-md"
+                        >
+                          顯示全系統
+                        </button>
+                      </div>
+                    </header>
 
-                {/* 原有區塊：PCW vs TCS 物理隔離 */}
-                <div className="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
-                  <div>
-                    <h4 className="text-xl font-black text-white border-b-2 border-slate-600 pb-3 mb-5 flex items-center gap-2">
-                      <Icon name="ArrowRightLeft" className="text-cyan-400" /> 熱交換：PCW 與 TCS 是如何對接？
-                    </h4>
-                    <p className="text-sm text-slate-300 leading-relaxed mb-6">
-                      在 CDU 內部，廠務冷卻水(PCW)與技術冷卻水(TCS)是<strong>「絕對不互通」</strong>的。它們透過內部的「板式熱交換器」進行純物理的熱量傳遞。
-                    </p>
-                    
-                    <div className="bg-slate-900 rounded-xl p-4 flex items-center justify-between border border-slate-700">
-                       <div className="text-center w-1/3">
-                          <div className="text-blue-400 font-black text-sm mb-1">PCW (一次側)</div>
-                          <div className="text-xs text-slate-400">廠務粗水 16°C</div>
-                       </div>
-                       
-                       <div className="flex-1 flex flex-col items-center relative">
-                          <div className="flex w-full items-center justify-center gap-2">
-                            <Icon name="ArrowRight" className="text-blue-500" size={16} />
-                            <div className="bg-slate-700 text-white font-bold px-3 py-2 rounded-lg border border-slate-500 text-xs whitespace-nowrap z-10">
-                              板式熱交換器
-                            </div>
-                            <Icon name="ArrowRight" className="text-cyan-500" size={16} />
+                    {/* --- 動態平面藍圖 (Dynamic Blueprint) --- */}
+                    <main className="relative w-full aspect-[16/9] min-h-[600px] bg-[#0f172a] rounded-2xl shadow-2xl overflow-hidden border-4 border-slate-700 select-none">
+                      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+
+                      {/* 電力與行政區 */}
+                      <div className="absolute top-0 left-0 w-[25%] h-[35%] bg-yellow-900/10 border-r border-b border-slate-700 flex flex-col p-4">
+                        <span className="text-xs font-black text-yellow-600/50 uppercase tracking-widest">Transformer Room</span>
+                      </div>
+                      <div className="absolute top-0 left-[25%] w-[25%] h-[35%] bg-yellow-900/5 border-r border-b border-slate-700 flex flex-col p-4">
+                        <span className="text-xs font-black text-yellow-600/50 uppercase tracking-widest">UPS & Battery</span>
+                      </div>
+                      <div className="absolute top-0 left-[50%] w-[50%] h-[35%] bg-slate-800/20 border-b border-slate-700 flex flex-col p-4 items-end">
+                        <span className="text-xs font-black text-slate-500 uppercase tracking-widest">NOC Control Center</span>
+                      </div>
+
+                      {/* 灰區與白區 */}
+                      <div className="absolute top-[35%] left-0 w-[30%] h-[65%] bg-blue-900/10 border-r-2 border-slate-600 flex flex-col p-4">
+                        <span className="text-sm font-black text-blue-400/50 uppercase tracking-widest mb-1">Gray Space</span>
+                        <span className="text-[10px] text-slate-500">Mechanical & Pumping</span>
+                      </div>
+                      <div className="absolute top-[35%] left-[30%] w-[70%] h-[65%] bg-slate-900 flex flex-col p-6">
+                        <span className="text-xl font-black text-slate-700 uppercase tracking-[0.5em] text-center w-full absolute top-8 left-0">White Space (IT Hall)</span>
+                      </div>
+
+                      {/* 實體設備 */}
+                      <div className="absolute left-[12.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg">
+                        <Icon name="Zap" size={24} className="mb-1" />
+                        <span className="text-[9px] font-bold">Main TX</span>
+                      </div>
+
+                      <div className="absolute left-[37.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-32 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg p-2">
+                        <span className="text-[9px] font-bold mb-1">UPS Bank</span>
+                        <div className="flex gap-1 w-full h-full">
+                          {[1,2,3,4].map(i => <div key={i} className="flex-1 bg-yellow-600/20 border border-yellow-600/30 rounded-sm"></div>)}
+                        </div>
+                      </div>
+
+                      <div className="absolute left-[92%] top-[20%] -translate-x-1/2 -translate-y-1/2 w-24 h-16 bg-slate-800 border-2 border-green-600/50 rounded flex flex-col items-center justify-center text-green-500 z-10 shadow-lg">
+                        <Icon name="Activity" size={20} className="mb-1" />
+                        <span className="text-[9px] font-bold">Generator</span>
+                      </div>
+
+                      <div className="absolute left-[92%] top-[70%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-slate-800 border-2 border-blue-500/50 rounded-full flex flex-col items-center justify-center text-blue-400 z-10 shadow-lg">
+                        <Icon name="Wind" size={24} className="mb-1" />
+                        <span className="text-[9px] font-bold text-center">Cooling<br/>Tower</span>
+                      </div>
+
+                      <div className="absolute left-[15%] top-[55%] -translate-x-1/2 -translate-y-1/2 w-32 h-16 bg-slate-800 border-2 border-blue-500/50 rounded flex items-center justify-center gap-2 text-blue-400 z-10 shadow-lg">
+                        <Icon name="Wind" size={18} className="animate-spin-slow" />
+                        <span className="text-[10px] font-bold">Chiller Plant</span>
+                      </div>
+
+                      <div className="absolute left-[15%] top-[80%] -translate-x-1/2 -translate-y-1/2 w-40 h-20 bg-slate-800 border-2 border-cyan-600/50 rounded flex items-center justify-around text-cyan-400 z-10 shadow-lg p-2">
+                        <div className="flex flex-col items-center">
+                          <Icon name="Droplets" size={16} className="mb-1 text-blue-400" />
+                          <span className="text-[8px] font-bold text-white">CDU-01</span>
+                        </div>
+                        <div className="h-full w-px bg-slate-600"></div>
+                        <div className="flex flex-col items-center">
+                          <Icon name="Droplets" size={16} className="mb-1 text-cyan-400" />
+                          <span className="text-[8px] font-bold text-white">CDU-02</span>
+                        </div>
+                        <div className="absolute -top-3 right-2 bg-slate-700 text-slate-300 text-[8px] px-2 py-0.5 rounded border border-slate-600">熱交換核心</div>
+                      </div>
+
+                      {/* AI 機櫃群 */}
+                      {[45, 60, 75].map((left, idx) => (
+                        <div key={`r1-${idx}`} className="absolute top-[60%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
+                          <Icon name="Server" size={20} className="mb-1" />
+                          <span className="text-[8px] font-mono">NVL72</span>
+                          <div className="absolute top-0 w-full h-1 bg-cyan-500/50 rounded-t"></div>
+                        </div>
+                      ))}
+                      {[45, 60, 75].map((left, idx) => (
+                        <div key={`r2-${idx}`} className="absolute top-[85%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
+                          <Icon name="Server" size={20} className="mb-1" />
+                          <span className="text-[8px] font-mono">NVL72</span>
+                          <div className="absolute top-0 w-full h-1 bg-cyan-500/50 rounded-t"></div>
+                        </div>
+                      ))}
+
+                      {/* SVG 管線路徑圖層 */}
+                      <svg viewBox="0 0 1600 900" className="absolute inset-0 w-full h-full z-20 pointer-events-none">
+                        <defs>
+                          <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+                          <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+                          <filter id="glow-yellow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+                        </defs>
+
+                        {/* 1. 冷卻管路 */}
+                        {(activeSystem === 'all' || activeSystem === 'cooling') && (
+                          <g>
+                            <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#1e3a8a" strokeWidth="12" fill="none" opacity="0.5" strokeLinejoin="round" />
+                            <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#3b82f6" strokeWidth="4" strokeDasharray="16 16" fill="none" strokeLinejoin="round" className="animate-flow-normal glow-blue" />
+                            <text x="750" y="835" className="fill-blue-400 text-xs font-bold tracking-widest">CWS 冷凝水迴路 (Facilities)</text>
+
+                            <path d="M 240 520 L 240 680" stroke="#1d4ed8" strokeWidth="12" fill="none" opacity="0.5" />
+                            <path d="M 240 520 L 240 680" stroke="#60a5fa" strokeWidth="4" strokeDasharray="12 12" fill="none" className="animate-flow-fast glow-blue" />
+                            <text x="255" y="600" className="fill-blue-300 text-[10px] font-bold">PCW</text>
+
+                            <path d="M 300 720 L 400 720 L 400 450 L 1200 450" stroke="#083344" strokeWidth="12" fill="none" opacity="0.8" strokeLinejoin="round" />
+                            <path d="M 400 680 L 1200 680" stroke="#083344" strokeWidth="12" fill="none" opacity="0.8" />
+                            
+                            <path d="M 300 720 L 400 720 L 400 450 L 1200 450" stroke="#22d3ee" strokeWidth="4" strokeDasharray="16 16" fill="none" strokeLinejoin="round" className="animate-flow-fast glow-cyan" />
+                            <path d="M 400 680 L 1200 680" stroke="#22d3ee" strokeWidth="4" strokeDasharray="16 16" fill="none" className="animate-flow-fast glow-cyan" />
+                            
+                            {[720, 960, 1200].map(x => (
+                              <g key={`tcs-r1-${x}`}>
+                                <path d={`M ${x} 450 L ${x} 500`} stroke="#22d3ee" strokeWidth="3" fill="none" strokeDasharray="8 8" className="animate-flow-fast" />
+                              </g>
+                            ))}
+                            {[720, 960, 1200].map(x => (
+                              <g key={`tcs-r2-${x}`}>
+                                <path d={`M ${x} 680 L ${x} 720`} stroke="#22d3ee" strokeWidth="3" fill="none" strokeDasharray="8 8" className="animate-flow-fast" />
+                              </g>
+                            ))}
+
+                            <text x="500" y="435" className="fill-cyan-400 text-xs font-bold tracking-widest">TCS 伺服器技術冷卻水 (Secondary Loop Header)</text>
+                            
+                            <circle cx="480" cy="450" r="12" fill="none" stroke="#ef4444" strokeWidth="3" className="animate-pulse" />
+                            <circle cx="480" cy="680" r="12" fill="none" stroke="#ef4444" strokeWidth="3" className="animate-pulse" />
+                            <text x="495" y="470" className="fill-red-400 text-[10px] font-bold">防震穿牆封堵</text>
+                          </g>
+                        )}
+
+                        {/* 2. 電力系統 */}
+                        {(activeSystem === 'all' || activeSystem === 'power') && (
+                          <g>
+                            <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#422006" strokeWidth="10" fill="none" strokeLinejoin="round" />
+                            <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#facc15" strokeWidth="3" strokeDasharray="12 12" fill="none" strokeLinejoin="round" className="animate-flow-power glow-yellow" opacity="0.6" />
+                            <text x="800" y="50" className="fill-yellow-600 text-[10px] font-bold">Backup Power (11kV)</text>
+
+                            <path d="M 240 157 L 520 157" stroke="#854d0e" strokeWidth="12" fill="none" opacity="0.5" />
+                            <path d="M 240 157 L 520 157" stroke="#eab308" strokeWidth="6" strokeDasharray="15 15" fill="none" className="animate-flow-power glow-yellow" />
+                            <text x="320" y="145" className="fill-yellow-500 text-[10px] font-bold">Main Feeder</text>
+
+                            <path d="M 600 190 L 600 380 L 1200 380" stroke="#854d0e" strokeWidth="16" fill="none" opacity="0.4" strokeLinejoin="round" />
+                            <path d="M 600 190 L 600 380 L 1200 380" stroke="#fef08a" strokeWidth="6" strokeDasharray="20 10" fill="none" strokeLinejoin="round" className="animate-flow-power glow-yellow" />
+                            
+                            {[740, 980, 1220].map(x => (
+                              <path key={`pwr-${x}`} d={`M ${x} 380 L ${x} 500`} stroke="#fef08a" strokeWidth="2" strokeDasharray="6 6" fill="none" className="animate-flow-power" />
+                            ))}
+
+                            <text x="800" y="370" className="fill-yellow-400 text-xs font-black tracking-[0.2em] uppercase">Overhead Power Busway (匯流排)</text>
+                            
+                            <circle cx="600" cy="315" r="14" fill="none" stroke="#f59e0b" strokeWidth="3" />
+                            <text x="620" y="320" className="fill-yellow-500 text-[10px] font-bold">防火穿層 (Firestop)</text>
+                          </g>
+                        )}
+
+                        {/* 3. LDS */}
+                        {(activeSystem === 'all' || activeSystem === 'safety') && (
+                          <g>
+                            <path d="M 300 735 L 415 735 L 415 465 L 1200 465" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" strokeLinejoin="round" className="glow-red animate-pulse" />
+                            <path d="M 415 695 L 1200 695" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" className="glow-red animate-pulse" />
+                            <text x="800" y="480" className="fill-red-400 text-[10px] font-bold">LDS Sensing Cable (沿水管下方佈建)</text>
+                          </g>
+                        )}
+                      </svg>
+                    </main>
+
+                    {/* 面試實戰：核心工程觀念圖解區 */}
+                    <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                      
+                      {/* 原有區塊：系統佈局重點 */}
+                      <div className="bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+                        <h4 className="text-xl font-black text-slate-800 border-b-2 border-slate-200 pb-3 mb-5 flex items-center gap-2">
+                          <Icon name="Settings" className="text-slate-500" /> 空間與管線佈局重點
+                        </h4>
+                        <div className="space-y-6">
+                          <div className="flex gap-4">
+                             <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                               <Icon name="Droplets" className="text-blue-600" size={20} />
+                             </div>
+                             <div>
+                               <span className="font-bold text-slate-800 text-lg">水路配置：灰/白區的安全邊界</span>
+                               <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                                 圖中藍色水路(PCW)只允許在灰區活動。透過 <strong>CDU (冷卻分配單元)</strong>，熱量被轉移，但水質被實體隔離。只有極高純度的青色水路(TCS)才能穿過紅色標示的「防震穿牆點」進入白區，保障伺服器安全。
+                               </p>
+                             </div>
                           </div>
-                       </div>
+                          <div className="flex gap-4">
+                             <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
+                               <Icon name="Zap" className="text-yellow-600" size={20} />
+                             </div>
+                             <div>
+                               <span className="font-bold text-slate-800 text-lg">電路配置：Busway 高密度微縮化</span>
+                               <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                                 為支援高達 100kW+ 的機櫃，傳統電纜已被淘汰。圖中黃色路徑展示了 <strong>Busway (匯流排)</strong> 的走法。它通常採「上走線」，並與水管(TCS)保持絕對的立體錯位（水下、電上），避免漏水引發短路。
+                               </p>
+                             </div>
+                          </div>
+                        </div>
+                      </div>
 
-                       <div className="text-center w-1/3">
-                          <div className="text-cyan-400 font-black text-sm mb-1">TCS (二次側)</div>
-                          <div className="text-xs text-slate-400">純淨技術水 25°C</div>
-                       </div>
+                      {/* 原有區塊：PCW vs TCS 物理隔離 */}
+                      <div className="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                          <h4 className="text-xl font-black text-white border-b-2 border-slate-600 pb-3 mb-5 flex items-center gap-2">
+                            <Icon name="ArrowRightLeft" className="text-cyan-400" /> 熱交換：PCW 與 TCS 是如何對接？
+                          </h4>
+                          <p className="text-sm text-slate-300 leading-relaxed mb-6">
+                            在 CDU 內部，廠務冷卻水(PCW)與技術冷卻水(TCS)是<strong>「絕對不互通」</strong>的。它們透過內部的「板式熱交換器」進行純物理的熱量傳遞。
+                          </p>
+                          
+                          <div className="bg-slate-900 rounded-xl p-4 flex items-center justify-between border border-slate-700">
+                             <div className="text-center w-1/3">
+                                <div className="text-blue-400 font-black text-sm mb-1">PCW (一次側)</div>
+                                <div className="text-xs text-slate-400">廠務粗水 16°C</div>
+                             </div>
+                             
+                             <div className="flex-1 flex flex-col items-center relative">
+                                <div className="flex w-full items-center justify-center gap-2">
+                                  <Icon name="ArrowRight" className="text-blue-500" size={16} />
+                                  <div className="bg-slate-700 text-white font-bold px-3 py-2 rounded-lg border border-slate-500 text-xs whitespace-nowrap z-10">
+                                    板式熱交換器
+                                  </div>
+                                  <Icon name="ArrowRight" className="text-cyan-500" size={16} />
+                                </div>
+                             </div>
+
+                             <div className="text-center w-1/3">
+                                <div className="text-cyan-400 font-black text-sm mb-1">TCS (二次側)</div>
+                                <div className="text-xs text-slate-400">純淨技術水 25°C</div>
+                             </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex items-start gap-2 text-yellow-400/90 bg-yellow-900/20 p-3 rounded-lg border border-yellow-700/50">
+                          <Icon name="Info" size={16} className="mt-0.5 shrink-0" />
+                          <span className="text-xs font-medium">
+                            工程師口訣：「CDU 不只是水泵浦，它更是水質與水壓的『實體防火牆』，負責擋下廠務端的雜質與水鎚效應。」
+                          </span>
+                        </div>
+                      </div>
+
+                    </section>
+
+                    {/* 原有區塊：架構對決 */}
+                    <section className="mt-6">
+                      <h3 className="text-2xl font-black text-slate-900 border-b-2 border-slate-300 pb-3 mb-6 flex items-center gap-2">
+                        <Icon name="Scale" className="text-indigo-600" size={28} /> 架構對決：傳統廠房型 vs 貨櫃式/模組化 (Modular AIDC)
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* 傳統廠房型 (Traditional Stick-Built) */}
+                        <div className="bg-white rounded-2xl shadow-md border-t-8 border-indigo-600 overflow-hidden">
+                          <div className="p-6 bg-slate-50 border-b border-slate-200">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="bg-indigo-100 p-2 rounded-lg">
+                                <Icon name="Building2" className="text-indigo-700" size={28} />
+                              </div>
+                              <h4 className="text-xl font-bold text-slate-800">傳統廠房型 (Stick-Built)</h4>
+                            </div>
+                            <p className="text-sm text-slate-500">實體土建工程，基礎設施依賴現場放樣、配管與施工，為目前多數大型資料中心的標準作法。</p>
+                          </div>
+                          
+                          <div className="p-6 space-y-6">
+                            <div>
+                              <h5 className="text-sm font-bold text-emerald-600 flex items-center gap-2 mb-3">
+                                <Icon name="CheckCircle2" size={18} /> 主要優勢 (Pros)
+                              </h5>
+                              <ul className="space-y-3 text-sm text-slate-700">
+                                <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>超大規模擴充性：</strong> 適合百兆瓦 (100MW+) 等級的單一園區，能極大化規模經濟。</li>
+                                <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>維修與操作空間：</strong> 灰區與白區的走道淨空較大，便於工程師進行大型設備(如CDU、冰機)的維修與抽換。</li>
+                                <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>長效期 PUE 表現：</strong> 若初始建築通風與散熱設計優良，長期營運的整體能源效率通常較佳。</li>
+                              </ul>
+                            </div>
+                            <div>
+                              <h5 className="text-sm font-bold text-rose-600 flex items-center gap-2 mb-3">
+                                <Icon name="XCircle" size={18} /> 主要挑戰 (Cons)
+                              </h5>
+                              <ul className="space-y-3 text-sm text-slate-700">
+                                <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>建置週期極長：</strong> 從整地、土建、機電拉線到完工，通常需要 <strong>18 到 36 個月</strong>，難以趕上當前 AI 算力爆發的速度。</li>
+                                <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>現場施工變數高：</strong> 大量管線需在現場焊接、防漏測試，高度依賴工人技術，施工品質控制成本高。</li>
+                                <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>沉沒資本高：</strong> 初期土建資本支出 (CAPEX) 龐大，且建築落成後難以輕易移動。</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 貨櫃/模組化 (Modular / Containerized) */}
+                        <div className="bg-white rounded-2xl shadow-md border-t-8 border-teal-500 overflow-hidden">
+                          <div className="p-6 bg-slate-50 border-b border-slate-200">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="bg-teal-100 p-2 rounded-lg">
+                                <Icon name="Box" className="text-teal-700" size={28} />
+                              </div>
+                              <h4 className="text-xl font-bold text-slate-800">貨櫃式/模組化 (Modular)</h4>
+                            </div>
+                            <p className="text-sm text-slate-500">將 IT 機櫃、CDU、配電盤預先在工廠組裝於貨櫃中，運至現場直接「隨插即用」。</p>
+                          </div>
+                          
+                          <div className="p-6 space-y-6">
+                            <div>
+                              <h5 className="text-sm font-bold text-emerald-600 flex items-center gap-2 mb-3">
+                                <Icon name="CheckCircle2" size={18} /> 主要優勢 (Pros)
+                              </h5>
+                              <ul className="space-y-3 text-sm text-slate-700">
+                                <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>光速部署 (Time-to-Market)：</strong> 工廠製造與現場整地並行，建置週期可壓縮至 <strong>6 到 12 個月</strong>。</li>
+                                <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>工廠級品質管控：</strong> 水路管線的焊接與防漏測試全在無塵工廠環境內完成，標準化與良率極高。</li>
+                                <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>隨需擴容 (Pay-as-you-grow)：</strong> 算力需求增加時，只需拉新的貨櫃並聯水電即可，適合邊緣計算 (Edge Computing) 或分散式部署。</li>
+                              </ul>
+                            </div>
+                            <div>
+                              <h5 className="text-sm font-bold text-rose-600 flex items-center gap-2 mb-3">
+                                <Icon name="XCircle" size={18} /> 主要挑戰 (Cons)
+                              </h5>
+                              <ul className="space-y-3 text-sm text-slate-700">
+                                <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>空間與維修受限：</strong> 貨櫃內部走道狹窄，伺服器抽換、管路查修的操作空間遠不如傳統廠房舒適。</li>
+                                <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>高度依賴外部環境：</strong> 若放置於戶外，需額外考量極端氣候（高溫、嚴寒、鹽害）對金屬外殼與散熱能力的影響。</li>
+                                <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>客製化彈性低：</strong> 受限於貨櫃的標準物理尺寸，未來若有非標準規格的新型 AI 機櫃，較難直接相容。</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                )}
+
+                {/* ========================================================= */}
+                {/* ================= 第二頁：市場主流機櫃調查報告 ================= */}
+                {/* ========================================================= */}
+                {mainTab === 'report' && (
+                  <div className="flex flex-col gap-6 animate-fade-in">
+                    <header className="border-b border-slate-300 pb-4">
+                      <h1 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <Icon name="BarChart" className="text-teal-600" size={32} /> 市場主流 AI 機櫃與算力架構調查
+                      </h1>
+                      <p className="text-slate-600 mt-2 font-medium">
+                        以 NVIDIA GB200 為核心的市場競爭格局，探討各廠牌機櫃的物理參數、耗電發熱量及冷卻需求，與鴻海科技集團的關鍵戰略角色。
+                      </p>
+                    </header>
+
+                    {/* 鴻海戰略區塊 */}
+                    <section className="bg-gradient-to-r from-slate-900 to-indigo-900 rounded-2xl shadow-xl p-8 text-white">
+                      <div className="flex flex-col md:flex-row gap-8 items-center">
+                        <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center shrink-0">
+                          <Icon name="Cpu" size={32} className="text-indigo-300" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-black mb-3 text-indigo-100">鴻海 (Foxconn / Ingrasys) 的核心戰略角色</h2>
+                          <p className="text-slate-300 leading-relaxed mb-4">
+                            鴻海已從傳統代工廠成功轉型為<strong>「全球最大 AI Server 系統整合與 AI Factory 解決方案提供商」</strong>。在全球供應鏈中，鴻海扮演著定義下一代基礎設施的關鍵角色：
+                          </p>
+                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-200">
+                            <li className="flex gap-2"><Icon name="CheckCircle2" size={18} className="text-emerald-400 shrink-0" /> <strong>全球首座 AI 伺服器燈塔工廠：</strong> 以高度自動化製造 NVIDIA 核心硬體。</li>
+                            <li className="flex gap-2"><Icon name="CheckCircle2" size={18} className="text-emerald-400 shrink-0" /> <strong>800 VDC 供電架構制定者：</strong> 與 NVIDIA 合作開發次世代直流高壓供電，大幅降低高密度機櫃的電能轉換耗損。</li>
+                            <li className="flex gap-2"><Icon name="CheckCircle2" size={18} className="text-emerald-400 shrink-0" /> <strong>頂尖液冷技術整合：</strong> 結盟 ZutaCore 等冷卻巨頭，開發出專為 H200/GB200 優化的 <strong>兩相浸沒式 (2-phase DLC)</strong> 先進冷卻解決方案。</li>
+                            <li className="flex gap-2"><Icon name="CheckCircle2" size={18} className="text-emerald-400 shrink-0" /> <strong>全機櫃交鑰匙方案 (Turnkey)：</strong> 從 GPU 模組、伺服器主機板到 CDU、水路管線與機櫃系統，提供一條龍完整輸出。</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* 競爭對手分析資料表 */}
+                    <section className="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden mt-2">
+                      <div className="p-6 border-b border-slate-200 bg-slate-50">
+                        <h3 className="text-xl font-bold text-slate-800">市場主流 AI 訓練/推論機櫃規格比較</h3>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                          <thead className="bg-slate-100 text-slate-600 font-bold border-b-2 border-slate-300">
+                            <tr>
+                              <th className="px-6 py-4">廠商與架構</th>
+                              <th className="px-6 py-4">核心晶片</th>
+                              <th className="px-6 py-4">機櫃尺寸 (U數 / 寬深)</th>
+                              <th className="px-6 py-4">單櫃功耗 (kW)</th>
+                              <th className="px-6 py-4">冷卻架構與水流需求</th>
+                              <th className="px-6 py-4">市場定位與競爭點</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-200">
+                            
+                            {/* NVIDIA GB200 */}
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-6 py-4 font-black text-indigo-700">NVIDIA<br/><span className="text-xs text-slate-500 font-normal">GB200 NVL72</span></td>
+                              <td className="px-6 py-4">72x Blackwell GPU<br/>36x Grace CPU</td>
+                              <td className="px-6 py-4">48U (OCP ORV3)<br/>W: 600mm / D: 1068mm<br/><span className="text-xs text-slate-400">總重約 1,360 kg</span></td>
+                              <td className="px-6 py-4 font-bold text-rose-600">120 kW ~ 132 kW</td>
+                              <td className="px-6 py-4">
+                                <span className="inline-block bg-blue-100 text-blue-800 text-[10px] px-2 py-1 rounded font-bold mb-1">Direct Liquid Cooling (DLC)</span><br/>
+                                強制要求水冷 (100% 覆蓋)，需配備 120kW+ 級別 CDU，入水溫標準 25°C-45°C。
+                              </td>
+                              <td className="px-6 py-4 text-xs text-slate-600">市場絕對霸主 (市佔率 >90%)。主打銅線 NVLink 達成單一巨大 GPU 效果，推理與訓練性能頂尖。</td>
+                            </tr>
+
+                            {/* AMD Instinct */}
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-6 py-4 font-black text-red-600">AMD<br/><span className="text-xs text-slate-500 font-normal">MI300X / MI325X</span></td>
+                              <td className="px-6 py-4">8x MI300X (OAM Baseboard)</td>
+                              <td className="px-6 py-4">標準 19吋 或 21吋 OCP<br/>高度視堆疊伺服器數量 (通常 42U-48U)</td>
+                              <td className="px-6 py-4 font-bold text-orange-500">80 kW ~ 100 kW</td>
+                              <td className="px-6 py-4">
+                                <span className="inline-block bg-teal-100 text-teal-800 text-[10px] px-2 py-1 rounded font-bold mb-1">Hybrid (Air + Liquid)</span><br/>
+                                晶片採水冷板，其餘組件空冷。TCS 水流速要求依賴 CDU 設計。
+                              </td>
+                              <td className="px-6 py-4 text-xs text-slate-600">最大競爭對手。擁有領先的 HBM 記憶體容量 (極利於推論)，以高性價比搶奪開源模型市場。</td>
+                            </tr>
+
+                            {/* Intel Gaudi 3 */}
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-6 py-4 font-black text-sky-600">Intel<br/><span className="text-xs text-slate-500 font-normal">Gaudi 3 AI Accel.</span></td>
+                              <td className="px-6 py-4">Gaudi 3 HL-325L (OAM)</td>
+                              <td className="px-6 py-4">標準 19吋 機櫃<br/>42U 企業級架構</td>
+                              <td className="px-6 py-4 font-bold text-yellow-600">40 kW ~ 80 kW</td>
+                              <td className="px-6 py-4">
+                                <span className="inline-block bg-teal-100 text-teal-800 text-[10px] px-2 py-1 rounded font-bold mb-1">Air or DLC</span><br/>
+                                支援傳統空冷或升級水冷。發熱量較易管理，冷卻水需求相對較低。
+                              </td>
+                              <td className="px-6 py-4 text-xs text-slate-600">主攻「高 C/P 值企業端」與既有 x86 生態系，標榜同等推理效能下耗電與建置成本更低。</td>
+                            </tr>
+
+                            {/* CSP Custom ASICs */}
+                            <tr className="hover:bg-slate-50 transition-colors">
+                              <td className="px-6 py-4 font-black text-slate-700">CSP 自研晶片 (ASIC)<br/><span className="text-xs text-slate-500 font-normal">Google TPU v5p / AWS Trainium</span></td>
+                              <td className="px-6 py-4">雲端巨頭客製化晶片</td>
+                              <td className="px-6 py-4">高度客製化 (非市售)<br/>極高密度堆疊</td>
+                              <td className="px-6 py-4 font-bold text-rose-500">60 kW ~ 100+ kW</td>
+                              <td className="px-6 py-4">
+                                <span className="inline-block bg-blue-100 text-blue-800 text-[10px] px-2 py-1 rounded font-bold mb-1">Custom Liquid Cooling</span><br/>
+                                深度定製冷卻流道。Google 等巨頭甚至實驗性採用液態金屬或極低溫兩相浸沒式冷卻。
+                              </td>
+                              <td className="px-6 py-4 text-xs text-slate-600">為擺脫對 NVIDIA 的依賴，預計 2026 年自研 ASIC 伺服器出貨量將佔市場 27.8%。專供自家雲端服務。</td>
+                            </tr>
+                            
+                            {/* 未來展望：NVIDIA Rubin */}
+                            <tr className="hover:bg-indigo-50 transition-colors bg-indigo-50/30">
+                              <td className="px-6 py-4 font-black text-indigo-900 border-l-4 border-indigo-500">NVIDIA (2026+)<br/><span className="text-xs text-slate-500 font-normal">Rubin / GB300 NVL72</span></td>
+                              <td className="px-6 py-4">Rubin GPU<br/>Vera CPU</td>
+                              <td className="px-6 py-4">大型超高密度機櫃</td>
+                              <td className="px-6 py-4 font-black text-red-700 text-lg">250 kW ~ 900 kW</td>
+                              <td className="px-6 py-4">
+                                <span className="inline-block bg-purple-100 text-purple-800 text-[10px] px-2 py-1 rounded font-bold mb-1">Advanced 2-Phase DLC / Immersion</span><br/>
+                                單櫃逼近 1MW，水冷已到物理極限，需革命性管線設計與大流量 CDU。
+                              </td>
+                              <td className="px-6 py-4 text-xs text-slate-600 font-bold">未來基礎設施的終極挑戰。這將完全重塑廠房電力傳輸（匯流排）與冰機系統。</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+
+                    {/* 工程師重點提示區塊 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h4 className="font-bold text-slate-800 border-b pb-2 mb-3 flex items-center gap-2">
+                          <Icon name="Settings" size={18} className="text-slate-500" /> 機櫃發熱量與冷卻水量 (TCS) 的關係
+                        </h4>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          管線工程師在評估機櫃時，最關心的是 <strong>ΔT (溫差)</strong> 與 <strong>LPM (每分鐘公升數)</strong>。
+                          以 132kW 的 GB200 機櫃為例，如果要求進水溫度與出水溫度維持 10°C 的溫差，根據熱力學公式，單一機櫃每分鐘需要極為龐大的水流量在背板與冷水排間循環。這直接決定了：
+                        </p>
+                        <ul className="list-disc pl-5 mt-2 text-sm text-slate-600 space-y-1">
+                          <li>白區天花板的 Header 幹管口徑需達 4吋~6吋 以上。</li>
+                          <li>管內水壓極高，穿牆防震與 <strong>盲插接頭 (Blind-mate QD)</strong> 的防漏等級要求極嚴苛。</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h4 className="font-bold text-slate-800 border-b pb-2 mb-3 flex items-center gap-2">
+                          <Icon name="Zap" size={18} className="text-yellow-500" /> 為什麼鴻海要推動 800 VDC？
+                        </h4>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                          傳統機房使用 AC (交流電) 進櫃，再由伺服器電源 (PSU) 轉為 12V 或 48V 直流電 (DC)。當機櫃功耗達到 130kW 時，這種轉換過程會產生大量額外廢熱（耗損）。
+                        </p>
+                        <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                          鴻海推動的 <strong>800 VDC 直流高壓架構</strong>，讓電流從 UPS 出來後，直接以高壓直流進入機櫃，減少降壓次數。這不僅省下了可觀的電費 (PUE 下降)，更重要的是<strong>減少了銅線匯流排的粗度與重量</strong>，讓天花板有更多空間佈放冷卻水管。
+                        </p>
+                      </div>
                     </div>
+
                   </div>
+                )}
 
-                  <div className="mt-4 flex items-start gap-2 text-yellow-400/90 bg-yellow-900/20 p-3 rounded-lg border border-yellow-700/50">
-                    <Icon name="Info" size={16} className="mt-0.5 shrink-0" />
-                    <span className="text-xs font-medium">
-                      「CDU 不只是水泵浦，它更是水質與水壓的『實體防火牆』，負責擋下廠務端的雜質與水鎚效應。」
-                    </span>
+
+                {/* ========================================================= */}
+                {/* ================= 第三頁：重要公式及未來發想 ================= */}
+                {/* ========================================================= */}
+                {mainTab === 'future' && (
+                  <div className="flex flex-col gap-6 animate-fade-in">
+                    <header className="border-b border-slate-300 pb-4">
+                      <h1 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                        <Icon name="Lightbulb" className="text-amber-500" size={32} /> 重要公式及未來發想
+                      </h1>
+                      <p className="text-slate-600 mt-2 font-medium">
+                        掌握資料中心散熱的核心熱力學與 PUE 節能公式，並透過 800VDC 實戰情境計算，前瞻性預估未來 GB300 世代的嚴苛物理挑戰。
+                      </p>
+                    </header>
+
+                    {/* Section 1: 核心公式區 */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      
+                      {/* 熱力學公式 */}
+                      <div className="bg-white p-8 rounded-2xl shadow-md border-t-8 border-cyan-500">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Icon name="Thermometer" className="text-cyan-500" size={28} />
+                          <h3 className="text-xl font-bold text-slate-800">機櫃熱交換：核心熱力學公式</h3>
+                        </div>
+                        <div className="bg-slate-900 text-cyan-400 p-6 rounded-xl font-mono text-xl text-center shadow-inner tracking-wider mb-4">
+                          Q = ṁ × C<sub>p</sub> × ΔT
+                        </div>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                          <li><span className="font-bold text-slate-900 w-8 inline-block">Q</span> = <strong>機櫃總發熱量 (Heat Load, kW)</strong>：伺服器運算產生的廢熱。</li>
+                          <li><span className="font-bold text-slate-900 w-8 inline-block">ṁ</span> = <strong>冷卻水質量流率 (Mass Flow Rate, kg/s 或 LPM)</strong>：需要多少水流過冷水板才能帶走熱量。</li>
+                          <li><span className="font-bold text-slate-900 w-8 inline-block">C<sub>p</sub></span> = <strong>比熱容 (Specific Heat, kJ/kg·K)</strong>：純水或水冷液(如PG25)的熱容係數。</li>
+                          <li><span className="font-bold text-slate-900 w-8 inline-block">ΔT</span> = <strong>溫差 (Temperature Delta)</strong>：出水(熱)與進水(冷)的溫度差。</li>
+                        </ul>
+                        <div className="mt-4 p-3 bg-cyan-50 border border-cyan-200 rounded-lg text-xs text-cyan-800">
+                          <strong>工程師視角：</strong> 當機櫃的 Q (發熱量) 飆升，若我們想保持 ΔT 在安全範圍 (例如10°C)，唯一的方法就是大幅提升 ṁ (水流量)。這就是為什麼 AI 機房的水管口徑越來越粗，水泵(Pump)馬力越來越大的根本原因。
+                        </div>
+                      </div>
+
+                      {/* PUE 公式 */}
+                      <div className="bg-white p-8 rounded-2xl shadow-md border-t-8 border-green-500">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Icon name="Factory" className="text-green-500" size={28} />
+                          <h3 className="text-xl font-bold text-slate-800">PUE 能源使用效率公式</h3>
+                        </div>
+                        <div className="bg-slate-900 text-green-400 p-6 rounded-xl font-mono text-lg text-center shadow-inner tracking-wider mb-4 flex flex-col gap-2">
+                          <span>PUE = <span className="text-white">Total Facility Power</span></span>
+                          <span className="border-t border-slate-600 w-3/4 mx-auto my-1"></span>
+                          <span><span className="text-white opacity-0">PUE = </span>IT Equipment Power</span>
+                        </div>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                          <li><span className="font-bold text-slate-900">Total Facility Power (總設施能耗)：</span> 包含 IT 設備本身、冷卻系統(冰機、CDU)、照明、以及<strong>「電力轉換耗損」</strong>。</li>
+                          <li><span className="font-bold text-slate-900">IT Equipment Power (IT設備能耗)：</span> 純粹用於伺服器運算所消耗的電力。</li>
+                          <li><span className="font-bold text-slate-900">目標：</span> PUE 越接近 <strong>1.0</strong>，代表機房越節能。目前採用液冷的頂尖資料中心可達 1.1 ~ 1.2。</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Section 2: 實戰情境計算 */}
+                    <div className="bg-slate-900 rounded-2xl shadow-2xl p-8 border border-slate-700 text-slate-300 relative overflow-hidden mt-2">
+                      <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                        <Icon name="Calculator" size={120} />
+                      </div>
+                      
+                      <h3 className="text-2xl font-black text-white mb-6 flex items-center gap-3 border-b border-slate-700 pb-4">
+                        <Icon name="Calculator" className="text-yellow-400" size={28} /> 實戰情境計算：4組 GB200 機櫃 @ 800VDC 供電架構
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-slate-800 p-5 rounded-xl border border-slate-600">
+                          <h4 className="text-indigo-400 font-bold mb-2">Step 1: IT 設備總功耗</h4>
+                          <p className="text-xs text-slate-400 mb-2">以單台 NVIDIA GB200 NVL72 滿載 132kW 計算：</p>
+                          <div className="text-xl font-mono text-white">4 組 × 132 kW</div>
+                          <div className="text-3xl font-black text-indigo-300 mt-2">= 528 kW</div>
+                        </div>
+
+                        <div className="bg-slate-800 p-5 rounded-xl border border-slate-600">
+                          <h4 className="text-yellow-400 font-bold mb-2">Step 2: 800VDC 電流需求</h4>
+                          <p className="text-xs text-slate-400 mb-2">採用鴻海倡導的 800VDC 直流高壓，代入電功率公式 (I = P/V)：</p>
+                          <div className="text-xl font-mono text-white">528,000 W ÷ 800 V</div>
+                          <div className="text-3xl font-black text-yellow-300 mt-2">= 660 Amps (安培)</div>
+                          <p className="text-[10px] text-slate-400 mt-2">傳統 480VAC 降壓系統將需更高安培數與極粗的銅排。800VDC 顯著降低了線材粗度與轉換熱耗損。</p>
+                        </div>
+
+                        <div className="bg-slate-800 p-5 rounded-xl border border-slate-600">
+                          <h4 className="text-green-400 font-bold mb-2">Step 3: 廠房總電力需求預估</h4>
+                          <p className="text-xs text-slate-400 mb-2">導入先進液冷 (2-Phase DLC)，假設 PUE 達到極佳的 1.15：</p>
+                          <div className="text-xl font-mono text-white">528 kW × 1.15 PUE</div>
+                          <div className="text-3xl font-black text-green-300 mt-2">≈ 607.2 kW</div>
+                          <p className="text-[10px] text-slate-400 mt-2">這代表廠房需預留至少約 610 kW 的市電/UPS 容量來支撐這 4 組機櫃的運作與散熱。</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 3: 未來發想 (GB300 世代) */}
+                    <section className="mt-8">
+                      <h3 className="text-2xl font-black text-slate-900 border-b-2 border-slate-300 pb-3 mb-6 flex items-center gap-2">
+                        <Icon name="Activity" className="text-rose-600" size={28} /> 未來發想：迎接 NVIDIA Rubin (GB300) 的極限挑戰
+                      </h3>
+                      <p className="text-slate-600 mb-6">
+                        根據業界預估與 OCP (Open Compute Project) 規範，2026-2027 年將登場的 GB300 (Rubin) 世代，單一機櫃密度將迎來指數型爆發。傳統的建廠思維將被徹底顛覆。
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        
+                        {/* 挑戰 1: 電力 */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg transition-shadow">
+                          <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mb-4">
+                            <Icon name="Zap" className="text-rose-600" size={24} />
+                          </div>
+                          <h4 className="text-lg font-bold text-slate-800 mb-2">理論電力需求飆升</h4>
+                          <p className="text-sm text-slate-600">
+                            GB300 機櫃功耗預計將飆升至 <strong>250 kW ~ 900 kW (甚至逼近 1MW)</strong>。單一機櫃的耗電量將等同於過去一整座小型機房。必須全面仰賴 800V 或更高的超高壓直流匯流排 (Busway) 才能輸送足夠電力。
+                          </p>
+                        </div>
+
+                        {/* 挑戰 2: 水冷極限 */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg transition-shadow">
+                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                            <Icon name="Waves" className="text-blue-600" size={24} />
+                          </div>
+                          <h4 className="text-lg font-bold text-slate-800 mb-2">冷卻流體的物理極限</h4>
+                          <p className="text-sm text-slate-600">
+                            當發熱量逼近 500kW 以上，傳統單相水冷 (液態水帶走熱量) 的流速將面臨極大水壓考驗。未來極可能必須轉向 <strong>兩相浸沒式 (2-Phase Immersion) 或兩相冷板 (2-Phase DLC)</strong>，利用冷卻液汽化潛熱來吸收龐大廢熱。
+                          </p>
+                        </div>
+
+                        {/* 挑戰 3: 管線 */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg transition-shadow">
+                          <div className="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mb-4">
+                            <Icon name="Droplets" className="text-cyan-600" size={24} />
+                          </div>
+                          <h4 className="text-lg font-bold text-slate-800 mb-2">管線設計革命</h4>
+                          <p className="text-sm text-slate-600">
+                            TCS (技術冷卻水) 幹管口徑將巨型化。為了防止天花板走線漏水造成的毀滅性損害，以及承受巨大水流沖刷的震動，盲插式快速接頭 (Blind-mate QD) 的防漏等級、以及管線支撐防震抗拉力系統，將成為建廠最嚴苛的審查項目。
+                          </p>
+                        </div>
+
+                        {/* 挑戰 4: 承載 */}
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-lg transition-shadow">
+                          <div className="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center mb-4">
+                            <Icon name="Weight" className="text-slate-700" size={24} />
+                          </div>
+                          <h4 className="text-lg font-bold text-slate-800 mb-2">樓板承載力 (Floor Load)</h4>
+                          <p className="text-sm text-slate-600">
+                            GB200 重達 1,360 kg，而 GB300 因需容納更密集的 GPU、超大純銅散熱器與巨量冷卻液，單櫃重量預估將突破 <strong>1,500 ~ 2,000 kg</strong>。傳統的高架地板 (Raised Floor) 將完全無法承受，必須採用水泥實地 (Slab-on-grade) 搭配高強度基座安裝。
+                          </p>
+                        </div>
+
+                      </div>
+                    </section>
                   </div>
-                </div>
-
-              </section>
-
-              {/* ==================================================================== */}
-              {/* === 新增區塊：架構對決 (傳統廠房 vs 貨櫃模組化) === */}
-              {/* ==================================================================== */}
-              <section className="mt-6">
-                <h3 className="text-2xl font-black text-slate-900 border-b-2 border-slate-300 pb-3 mb-6 flex items-center gap-2">
-                  <Icon name="Scale" className="text-indigo-600" size={28} /> 架構對決：傳統廠房型 vs 貨櫃式/模組化 (Modular AIDC)
-                </h3>
+                )}
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  
-                  {/* 傳統廠房型 (Traditional Stick-Built) */}
-                  <div className="bg-white rounded-2xl shadow-md border-t-8 border-indigo-600 overflow-hidden">
-                    <div className="p-6 bg-slate-50 border-b border-slate-200">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="bg-indigo-100 p-2 rounded-lg">
-                          <Icon name="Building2" className="text-indigo-700" size={28} />
-                        </div>
-                        <h4 className="text-xl font-bold text-slate-800">傳統廠房型 (Stick-Built)</h4>
-                      </div>
-                      <p className="text-sm text-slate-500">實體土建工程，基礎設施依賴現場放樣、配管與施工，為目前多數大型資料中心的標準作法。</p>
-                    </div>
-                    
-                    <div className="p-6 space-y-6">
-                      <div>
-                        <h5 className="text-sm font-bold text-emerald-600 flex items-center gap-2 mb-3">
-                          <Icon name="CheckCircle2" size={18} /> 主要優勢 (Pros)
-                        </h5>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>超大規模擴充性：</strong> 適合百兆瓦 (100MW+) 等級的單一園區，能極大化規模經濟。</li>
-                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>維修與操作空間：</strong> 灰區與白區的走道淨空較大，便於工程師進行大型設備(如CDU、冰機)的維修與抽換。</li>
-                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>長效期 PUE 表現：</strong> 若初始建築通風與散熱設計優良，長期營運的整體能源效率通常較佳。</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h5 className="text-sm font-bold text-rose-600 flex items-center gap-2 mb-3">
-                          <Icon name="XCircle" size={18} /> 主要挑戰 (Cons)
-                        </h5>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>建置週期極長：</strong> 從整地、土建、機電拉線到完工，通常需要 <strong>18 到 36 個月</strong>，難以趕上當前 AI 算力爆發的速度。</li>
-                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>現場施工變數高：</strong> 大量管線需在現場焊接、防漏測試，高度依賴工人技術，施工品質控制成本高。</li>
-                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>沉沒資本高：</strong> 初期土建資本支出 (CAPEX) 龐大，且建築落成後難以輕易移動。</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 貨櫃/模組化 (Modular / Containerized) */}
-                  <div className="bg-white rounded-2xl shadow-md border-t-8 border-teal-500 overflow-hidden">
-                    <div className="p-6 bg-slate-50 border-b border-slate-200">
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="bg-teal-100 p-2 rounded-lg">
-                          <Icon name="Box" className="text-teal-700" size={28} />
-                        </div>
-                        <h4 className="text-xl font-bold text-slate-800">貨櫃式/模組化 (Modular)</h4>
-                      </div>
-                      <p className="text-sm text-slate-500">將 IT 機櫃、CDU、配電盤預先在工廠組裝於貨櫃中，運至現場直接「隨插即用」。</p>
-                    </div>
-                    
-                    <div className="p-6 space-y-6">
-                      <div>
-                        <h5 className="text-sm font-bold text-emerald-600 flex items-center gap-2 mb-3">
-                          <Icon name="CheckCircle2" size={18} /> 主要優勢 (Pros)
-                        </h5>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>光速部署 (Time-to-Market)：</strong> 工廠製造與現場整地並行，建置週期可壓縮至 <strong>6 到 12 個月</strong>。</li>
-                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>工廠級品質管控：</strong> 水路管線的焊接與防漏測試全在無塵工廠環境內完成，標準化與良率極高。</li>
-                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>隨需擴容 (Pay-as-you-grow)：</strong> 算力需求增加時，只需拉新的貨櫃並聯水電即可，適合邊緣計算 (Edge Computing) 或分散式部署。</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h5 className="text-sm font-bold text-rose-600 flex items-center gap-2 mb-3">
-                          <Icon name="XCircle" size={18} /> 主要挑戰 (Cons)
-                        </h5>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>空間與維修受限：</strong> 貨櫃內部走道狹窄，伺服器抽換、管路查修的操作空間遠不如傳統廠房舒適。</li>
-                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>高度依賴外部環境：</strong> 若放置於戶外，需額外考量極端氣候（高溫、嚴寒、鹽害）對金屬外殼與散熱能力的影響。</li>
-                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>客製化彈性低：</strong> 受限於貨櫃的標準物理尺寸，未來若有非標準規格的新型 AI 機櫃，較難直接相容。</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </section>
-
+              </div>
             </div>
           );
         };
