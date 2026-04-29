@@ -1,59 +1,338 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>CDS Design Calculator</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+import React, { useState } from 'react';
+import { Server, Zap, Droplets, Activity, Shield, Fan, Factory, Wind, Settings, ArrowRightLeft, Info, ArrowRight } from 'lucide-react';
 
-<h1>Micron Chemical Distribution System – Design Tool</h1>
+const App = () => {
+  const [activeSystem, setActiveSystem] = useState('all');
 
-<section>
-  <h2>1. Tool Flow & Diversity</h2>
+  const systems = [
+    { id: 'cooling', name: '冷卻動態路徑 (CWS/PCW/TCS)', color: 'border-blue-500', text: 'text-blue-400', bg: 'bg-blue-600' },
+    { id: 'power', name: '電力動態路徑 (Busway)', color: 'border-yellow-500', text: 'text-yellow-400', bg: 'bg-yellow-600' },
+    { id: 'safety', name: 'LDS 漏水偵測 (監控)', color: 'border-red-500', text: 'text-red-400', bg: 'bg-red-600' },
+  ];
 
-  <label>Peak Flow per Tool (LPM)</label>
-  <input id="peakFlow" type="number" value="10">
+  return (
+    <div className="flex flex-col gap-6 p-6 bg-slate-100 min-h-screen font-sans text-slate-800">
+      
+      {/* 注入自定義動畫 CSS */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes flow {
+          from { stroke-dashoffset: 40; }
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes flow-reverse {
+          from { stroke-dashoffset: 0; }
+          to { stroke-dashoffset: 40; }
+        }
+        .animate-flow-fast { animation: flow 0.5s linear infinite; }
+        .animate-flow-normal { animation: flow 1s linear infinite; }
+        .animate-flow-slow { animation: flow 2s linear infinite; }
+        .animate-flow-power { animation: flow-reverse 0.7s linear infinite; }
+        .glow-blue { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8)); }
+        .glow-cyan { filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.8)); }
+        .glow-yellow { filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.8)); }
+        .glow-red { filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8)); }
+      `}} />
 
-  <label>Number of Tools</label>
-  <input id="toolCount" type="number" value="10">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-300 pb-4">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+            <Factory className="text-indigo-600" size={32} /> AIDC 廠房動態管路總圖
+          </h1>
+          <p className="text-slate-600 mt-2 font-medium">
+            暗黑藍圖模式：展示水電分離佈線原則與動態流向，輕鬆掌握灰/白區對接介面。
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {systems.map(s => (
+            <button 
+              key={s.id}
+              onClick={() => setActiveSystem(s.id)}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border-2 ${activeSystem === s.id ? s.bg + ' text-white ' + s.color : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 shadow-sm'}`}
+            >
+              {s.name}
+            </button>
+          ))}
+          <button 
+            onClick={() => setActiveSystem('all')} 
+            className="px-4 py-2 rounded-lg text-xs font-bold bg-slate-800 text-white border-2 border-slate-800 hover:bg-slate-700 shadow-md"
+          >
+            顯示全系統
+          </button>
+        </div>
+      </header>
 
-  <label>Diversity Factor</label>
-  <input id="diversity" type="number" step="0.1" value="0.6">
+      {/* --- 動態平面藍圖 (Dynamic Blueprint) --- */}
+      <main className="relative w-full aspect-[16/9] min-h-[600px] bg-[#0f172a] rounded-2xl shadow-2xl overflow-hidden border-4 border-slate-700 select-none">
+        
+        {/* 背景網格線 */}
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
-  <button onclick="calcDesignFlow()">Calculate Design Flow</button>
+        {/* ================= 實體建築區域劃分 (HTML Divs) ================= */}
+        
+        {/* 電力與行政區 (Top Row) */}
+        <div className="absolute top-0 left-0 w-[25%] h-[35%] bg-yellow-900/10 border-r border-b border-slate-700 flex flex-col p-4">
+          <span className="text-xs font-black text-yellow-600/50 uppercase tracking-widest">Transformer Room</span>
+        </div>
+        <div className="absolute top-0 left-[25%] w-[25%] h-[35%] bg-yellow-900/5 border-r border-b border-slate-700 flex flex-col p-4">
+          <span className="text-xs font-black text-yellow-600/50 uppercase tracking-widest">UPS & Battery</span>
+        </div>
+        <div className="absolute top-0 left-[50%] w-[50%] h-[35%] bg-slate-800/20 border-b border-slate-700 flex flex-col p-4 items-end">
+          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">NOC Control Center</span>
+        </div>
 
-  <p id="designFlowResult"></p>
-</section>
+        {/* 灰區與白區 (Bottom Row) */}
+        <div className="absolute top-[35%] left-0 w-[30%] h-[65%] bg-blue-900/10 border-r-2 border-slate-600 flex flex-col p-4">
+          <span className="text-sm font-black text-blue-400/50 uppercase tracking-widest mb-1">Gray Space</span>
+          <span className="text-[10px] text-slate-500">Mechanical & Pumping</span>
+        </div>
+        <div className="absolute top-[35%] left-[30%] w-[70%] h-[65%] bg-slate-900 flex flex-col p-6">
+          <span className="text-xl font-black text-slate-700 uppercase tracking-[0.5em] text-center w-full absolute top-8 left-0">White Space (IT Hall)</span>
+        </div>
 
-<section>
-  <h2>2. Pipe Sizing (Velocity ≤ 0.3 m/s)</h2>
 
-  <button onclick="calcPipe()">Calculate Pipe Size</button>
-  <p id="pipeResult"></p>
-</section>
+        {/* ================= 實體設備佈置 (HTML Divs) ================= */}
+        
+        {/* 變壓器 (200, 157) */}
+        <div className="absolute left-[12.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg">
+          <Zap size={24} className="mb-1" />
+          <span className="text-[9px] font-bold">Main TX</span>
+        </div>
 
-<section>
-  <h2>3. Cabinet CDA Demand</h2>
+        {/* UPS 機組 (600, 157) */}
+        <div className="absolute left-[37.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-32 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg p-2">
+          <span className="text-[9px] font-bold mb-1">UPS Bank</span>
+          <div className="flex gap-1 w-full h-full">
+            {[1,2,3,4].map(i => <div key={i} className="flex-1 bg-yellow-600/20 border border-yellow-600/30 rounded-sm"></div>)}
+          </div>
+        </div>
 
-  <label>Number of Pumps</label>
-  <input id="pumpQty" type="number" value="2">
+        {/* 發電機 (戶外) (1472, 180) */}
+        <div className="absolute left-[92%] top-[20%] -translate-x-1/2 -translate-y-1/2 w-24 h-16 bg-slate-800 border-2 border-green-600/50 rounded flex flex-col items-center justify-center text-green-500 z-10 shadow-lg">
+          <Activity size={20} className="mb-1" />
+          <span className="text-[9px] font-bold">Generator</span>
+        </div>
 
-  <label>CDA per Pump (NL/min)</label>
-  <input id="cdaPerPump" type="number" value="200">
+        {/* 冷卻水塔 (戶外) (1472, 630) */}
+        <div className="absolute left-[92%] top-[70%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-slate-800 border-2 border-blue-500/50 rounded-full flex flex-col items-center justify-center text-blue-400 z-10 shadow-lg">
+          <Wind size={24} className="mb-1" />
+          <span className="text-[9px] font-bold text-center">Cooling<br/>Tower</span>
+        </div>
 
-  <button onclick="calcCDA()">Calculate CDA</button>
-  <p id="cdaResult"></p>
-</section>
+        {/* 冰機 Chiller (240, 495) */}
+        <div className="absolute left-[15%] top-[55%] -translate-x-1/2 -translate-y-1/2 w-32 h-16 bg-slate-800 border-2 border-blue-500/50 rounded flex items-center justify-center gap-2 text-blue-400 z-10 shadow-lg">
+          <Wind size={18} className="animate-spin-slow" />
+          <span className="text-[10px] font-bold">Chiller Plant</span>
+        </div>
 
-<footer style="margin-top:40px; font-size:14px; color:#666;">
-  <span id="versionInfo"></span>
-</footer>
-  
-<script src="data/constants.js"></script>
-<script src="modules/flow.js"></script>
-<script src="modules/pipe.js"></script>
-<script src="modules/utility.js"></script>
-<script src="main.js"></script>
-</body>
-</html>
+        {/* CDU 模組 (240, 720) */}
+        <div className="absolute left-[15%] top-[80%] -translate-x-1/2 -translate-y-1/2 w-40 h-20 bg-slate-800 border-2 border-cyan-600/50 rounded flex items-center justify-around text-cyan-400 z-10 shadow-lg p-2">
+          <div className="flex flex-col items-center">
+            <Droplets size={16} className="mb-1 text-blue-400" />
+            <span className="text-[8px] font-bold text-white">CDU-01</span>
+          </div>
+          <div className="h-full w-px bg-slate-600"></div>
+          <div className="flex flex-col items-center">
+            <Droplets size={16} className="mb-1 text-cyan-400" />
+            <span className="text-[8px] font-bold text-white">CDU-02</span>
+          </div>
+          <div className="absolute -top-3 right-2 bg-slate-700 text-slate-300 text-[8px] px-2 py-0.5 rounded border border-slate-600">熱交換核心</div>
+        </div>
+
+        {/* AI 機櫃群 (White Space) */}
+        {/* Row 1 (y=540): x=720, 960, 1200 */}
+        {[45, 60, 75].map((left, idx) => (
+          <div key={`r1-${idx}`} className="absolute top-[60%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
+            <Server size={20} className="mb-1" />
+            <span className="text-[8px] font-mono">NVL72</span>
+            <div className="absolute top-0 w-full h-1 bg-cyan-500/50 rounded-t"></div>
+          </div>
+        ))}
+        {/* Row 2 (y=765): x=720, 960, 1200 */}
+        {[45, 60, 75].map((left, idx) => (
+          <div key={`r2-${idx}`} className="absolute top-[85%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
+            <Server size={20} className="mb-1" />
+            <span className="text-[8px] font-mono">NVL72</span>
+            <div className="absolute top-0 w-full h-1 bg-cyan-500/50 rounded-t"></div>
+          </div>
+        ))}
+
+
+        {/* ================= SVG 管線路徑圖層 (動態繪製) ================= */}
+        <svg viewBox="0 0 1600 900" className="absolute inset-0 w-full h-full z-20 pointer-events-none">
+          <defs>
+            {/* 定義發光濾鏡 */}
+            <filter id="glow-blue" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+            <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+            <filter id="glow-yellow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
+          </defs>
+
+          {/* ---------------- 1. 冷卻管路系統 ---------------- */}
+          {(activeSystem === 'all' || activeSystem === 'cooling') && (
+            <g>
+              {/* CWS: 外部冷卻水塔(1472,630) -> 冰機(240,495) (走底邊) */}
+              <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#1e3a8a" strokeWidth="12" fill="none" opacity="0.5" strokeLinejoin="round" />
+              <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#3b82f6" strokeWidth="4" strokeDasharray="16 16" fill="none" strokeLinejoin="round" className="animate-flow-normal glow-blue" />
+              <text x="750" y="835" className="fill-blue-400 text-xs font-bold tracking-widest">CWS 冷凝水迴路 (Facilities)</text>
+
+              {/* PCW: 冰機(240,495) -> CDU(240,720) */}
+              <path d="M 240 520 L 240 680" stroke="#1d4ed8" strokeWidth="12" fill="none" opacity="0.5" />
+              <path d="M 240 520 L 240 680" stroke="#60a5fa" strokeWidth="4" strokeDasharray="12 12" fill="none" className="animate-flow-fast glow-blue" />
+              <text x="255" y="600" className="fill-blue-300 text-[10px] font-bold">PCW</text>
+
+              {/* TCS: CDU(240,720) -> 白區 Header 1 (450) & Header 2 (680) */}
+              {/* 幹管 */}
+              <path d="M 300 720 L 400 720 L 400 450 L 1200 450" stroke="#083344" strokeWidth="12" fill="none" opacity="0.8" strokeLinejoin="round" />
+              <path d="M 400 680 L 1200 680" stroke="#083344" strokeWidth="12" fill="none" opacity="0.8" />
+              
+              {/* 流動特效 */}
+              <path d="M 300 720 L 400 720 L 400 450 L 1200 450" stroke="#22d3ee" strokeWidth="4" strokeDasharray="16 16" fill="none" strokeLinejoin="round" className="animate-flow-fast glow-cyan" />
+              <path d="M 400 680 L 1200 680" stroke="#22d3ee" strokeWidth="4" strokeDasharray="16 16" fill="none" className="animate-flow-fast glow-cyan" />
+              
+              {/* 支管 Drops (Row 1) */}
+              {[720, 960, 1200].map(x => (
+                <g key={`tcs-r1-${x}`}>
+                  <path d={`M ${x} 450 L ${x} 500`} stroke="#22d3ee" strokeWidth="3" fill="none" strokeDasharray="8 8" className="animate-flow-fast" />
+                </g>
+              ))}
+              {/* 支管 Drops (Row 2) */}
+              {[720, 960, 1200].map(x => (
+                <g key={`tcs-r2-${x}`}>
+                  <path d={`M ${x} 680 L ${x} 720`} stroke="#22d3ee" strokeWidth="3" fill="none" strokeDasharray="8 8" className="animate-flow-fast" />
+                </g>
+              ))}
+
+              <text x="500" y="435" className="fill-cyan-400 text-xs font-bold tracking-widest">TCS 伺服器技術冷卻水 (Secondary Loop Header)</text>
+              
+              {/* 穿牆點標示 (TCS 進入白區 x=480) */}
+              <circle cx="480" cy="450" r="12" fill="none" stroke="#ef4444" strokeWidth="3" className="animate-pulse" />
+              <circle cx="480" cy="680" r="12" fill="none" stroke="#ef4444" strokeWidth="3" className="animate-pulse" />
+              <text x="495" y="470" className="fill-red-400 text-[10px] font-bold">防震穿牆封堵</text>
+            </g>
+          )}
+
+          {/* ---------------- 2. 電力系統路徑 ---------------- */}
+          {(activeSystem === 'all' || activeSystem === 'power') && (
+            <g>
+              {/* Gen -> Trans */}
+              <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#422006" strokeWidth="10" fill="none" strokeLinejoin="round" />
+              <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#facc15" strokeWidth="3" strokeDasharray="12 12" fill="none" strokeLinejoin="round" className="animate-flow-power glow-yellow" opacity="0.6" />
+              <text x="800" y="50" className="fill-yellow-600 text-[10px] font-bold">Backup Power (11kV)</text>
+
+              {/* Trans -> UPS */}
+              <path d="M 240 157 L 520 157" stroke="#854d0e" strokeWidth="12" fill="none" opacity="0.5" />
+              <path d="M 240 157 L 520 157" stroke="#eab308" strokeWidth="6" strokeDasharray="15 15" fill="none" className="animate-flow-power glow-yellow" />
+              <text x="320" y="145" className="fill-yellow-500 text-[10px] font-bold">Main Feeder</text>
+
+              {/* UPS -> 白區 Busway (匯流排) */}
+              {/* Busway 主幹 */}
+              <path d="M 600 190 L 600 380 L 1200 380" stroke="#854d0e" strokeWidth="16" fill="none" opacity="0.4" strokeLinejoin="round" />
+              <path d="M 600 190 L 600 380 L 1200 380" stroke="#fef08a" strokeWidth="6" strokeDasharray="20 10" fill="none" strokeLinejoin="round" className="animate-flow-power glow-yellow" />
+              
+              {/* Busway 垂降到機櫃 */}
+              {[740, 980, 1220].map(x => (
+                <path key={`pwr-${x}`} d={`M ${x} 380 L ${x} 500`} stroke="#fef08a" strokeWidth="2" strokeDasharray="6 6" fill="none" className="animate-flow-power" />
+              ))}
+
+              <text x="800" y="370" className="fill-yellow-400 text-xs font-black tracking-[0.2em] uppercase">Overhead Power Busway (匯流排)</text>
+              
+              {/* 電力穿牆點 */}
+              <circle cx="600" cy="315" r="14" fill="none" stroke="#f59e0b" strokeWidth="3" />
+              <text x="620" y="320" className="fill-yellow-500 text-[10px] font-bold">防火穿層 (Firestop)</text>
+            </g>
+          )}
+
+          {/* ---------------- 3. LDS 漏水偵測 ---------------- */}
+          {(activeSystem === 'all' || activeSystem === 'safety') && (
+            <g>
+              {/* 緊貼 TCS 走線的紅色虛線 */}
+              <path d="M 300 735 L 415 735 L 415 465 L 1200 465" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" strokeLinejoin="round" className="glow-red animate-pulse" />
+              <path d="M 415 695 L 1200 695" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" className="glow-red animate-pulse" />
+              <text x="800" y="480" className="fill-red-400 text-[10px] font-bold">LDS Sensing Cable (沿水管下方佈建)</text>
+            </g>
+          )}
+        </svg>
+
+      </main>
+
+      {/* --- 面試實戰：核心工程觀念圖解區 --- */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+        
+        {/* 區塊一：系統路徑工程規範 */}
+        <div className="bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+          <h4 className="text-xl font-black text-slate-800 border-b-2 border-slate-200 pb-3 mb-5 flex items-center gap-2">
+            <Settings className="text-slate-500" /> 空間與管線佈局重點
+          </h4>
+          <div className="space-y-6">
+            <div className="flex gap-4">
+               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                 <Droplets className="text-blue-600" size={20} />
+               </div>
+               <div>
+                 <span className="font-bold text-slate-800 text-lg">水路配置：灰/白區的安全邊界</span>
+                 <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                   圖中藍色水路(PCW)只允許在灰區活動。透過 <strong>CDU (冷卻分配單元)</strong>，熱量被轉移，但水質被實體隔離。只有極高純度的青色水路(TCS)才能穿過紅色標示的「防震穿牆點」進入白區，保障伺服器安全。
+                 </p>
+               </div>
+            </div>
+            <div className="flex gap-4">
+               <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
+                 <Zap className="text-yellow-600" size={20} />
+               </div>
+               <div>
+                 <span className="font-bold text-slate-800 text-lg">電路配置：Busway 高密度微縮化</span>
+                 <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                   為支援高達 100kW+ 的機櫃，傳統電纜已被淘汰。圖中黃色路徑展示了 <strong>Busway (匯流排)</strong> 的走法。它通常採「上走線」，並與水管(TCS)保持絕對的立體錯位（水下、電上），避免漏水引發短路。
+                 </p>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 區塊二：PCW vs TCS 物理隔離 (核心面試題) */}
+        <div className="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
+          <div>
+            <h4 className="text-xl font-black text-white border-b-2 border-slate-600 pb-3 mb-5 flex items-center gap-2">
+              <ArrowRightLeft className="text-cyan-400" /> 面試必考：PCW 與 TCS 是如何對接的？
+            </h4>
+            <p className="text-sm text-slate-300 leading-relaxed mb-6">
+              在 CDU 內部，廠務冷卻水(PCW)與技術冷卻水(TCS)是<strong>「絕對不互通」</strong>的。它們透過內部的「板式熱交換器」進行純物理的熱量傳遞。
+            </p>
+            
+            {/* 圖解微型組件 */}
+            <div className="bg-slate-900 rounded-xl p-4 flex items-center justify-between border border-slate-700">
+               <div className="text-center w-1/3">
+                  <div className="text-blue-400 font-black text-sm mb-1">PCW (一次側)</div>
+                  <div className="text-xs text-slate-400">廠務粗水 16°C</div>
+               </div>
+               
+               <div className="flex-1 flex flex-col items-center relative">
+                  <div className="flex w-full items-center justify-center gap-2">
+                    <ArrowRight className="text-blue-500" size={16} />
+                    <div className="bg-slate-700 text-white font-bold px-3 py-2 rounded-lg border border-slate-500 text-xs whitespace-nowrap z-10">
+                      板式熱交換器
+                    </div>
+                    <ArrowRight className="text-cyan-500" size={16} />
+                  </div>
+               </div>
+
+               <div className="text-center w-1/3">
+                  <div className="text-cyan-400 font-black text-sm mb-1">TCS (二次側)</div>
+                  <div className="text-xs text-slate-400">純淨技術水 25°C</div>
+               </div>
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-start gap-2 text-yellow-400/90 bg-yellow-900/20 p-3 rounded-lg border border-yellow-700/50">
+            <Info size={16} className="mt-0.5 shrink-0" />
+            <span className="text-xs font-medium">
+              工程師口訣：「CDU 不只是水泵浦，它更是水質與水壓的『實體防火牆』，負責擋下廠務端的雜質與水鎚效應。」
+            </span>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  );
+};
+
+export default App;
