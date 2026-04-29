@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>傳統廠房式 AIDC 廠房動態管路總圖</title>
+    <title>AIDC 廠房動態管路總圖</title>
     <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 載入 React 與 ReactDOM -->
@@ -18,7 +18,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // 內建圖示組件 (取代外部引入，確保單一檔案可完美運行)
+        // 內建圖示組件
         const Icon = ({ name, size = 24, className = "" }) => {
             const icons = {
                 Factory: <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>,
@@ -31,7 +31,12 @@
                 Settings: <><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></>,
                 ArrowRightLeft: <><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></>,
                 ArrowRight: <><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></>,
-                Info: <><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></>
+                Info: <><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></>,
+                Scale: <><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></>,
+                Building2: <><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></>,
+                Box: <><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></>,
+                CheckCircle2: <><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></>,
+                XCircle: <><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></>
             };
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -104,8 +109,8 @@
                 </div>
               </header>
 
+              {/* --- 動態平面藍圖 (Dynamic Blueprint) --- */}
               <main className="relative w-full aspect-[16/9] min-h-[600px] bg-[#0f172a] rounded-2xl shadow-2xl overflow-hidden border-4 border-slate-700 select-none">
-                
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
                 {/* 電力與行政區 */}
@@ -128,13 +133,12 @@
                   <span className="text-xl font-black text-slate-700 uppercase tracking-[0.5em] text-center w-full absolute top-8 left-0">White Space (IT Hall)</span>
                 </div>
 
-                {/* 變壓器 */}
+                {/* 實體設備 */}
                 <div className="absolute left-[12.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg">
                   <Icon name="Zap" size={24} className="mb-1" />
                   <span className="text-[9px] font-bold">Main TX</span>
                 </div>
 
-                {/* UPS 機組 */}
                 <div className="absolute left-[37.5%] top-[17.5%] -translate-x-1/2 -translate-y-1/2 w-32 h-20 bg-slate-800 border-2 border-yellow-600/50 rounded flex flex-col items-center justify-center text-yellow-500 z-10 shadow-lg p-2">
                   <span className="text-[9px] font-bold mb-1">UPS Bank</span>
                   <div className="flex gap-1 w-full h-full">
@@ -142,25 +146,21 @@
                   </div>
                 </div>
 
-                {/* 發電機 (戶外) */}
                 <div className="absolute left-[92%] top-[20%] -translate-x-1/2 -translate-y-1/2 w-24 h-16 bg-slate-800 border-2 border-green-600/50 rounded flex flex-col items-center justify-center text-green-500 z-10 shadow-lg">
                   <Icon name="Activity" size={20} className="mb-1" />
                   <span className="text-[9px] font-bold">Generator</span>
                 </div>
 
-                {/* 冷卻水塔 (戶外) */}
                 <div className="absolute left-[92%] top-[70%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-slate-800 border-2 border-blue-500/50 rounded-full flex flex-col items-center justify-center text-blue-400 z-10 shadow-lg">
                   <Icon name="Wind" size={24} className="mb-1" />
                   <span className="text-[9px] font-bold text-center">Cooling<br/>Tower</span>
                 </div>
 
-                {/* 冰機 Chiller */}
                 <div className="absolute left-[15%] top-[55%] -translate-x-1/2 -translate-y-1/2 w-32 h-16 bg-slate-800 border-2 border-blue-500/50 rounded flex items-center justify-center gap-2 text-blue-400 z-10 shadow-lg">
                   <Icon name="Wind" size={18} className="animate-spin-slow" />
                   <span className="text-[10px] font-bold">Chiller Plant</span>
                 </div>
 
-                {/* CDU 模組 */}
                 <div className="absolute left-[15%] top-[80%] -translate-x-1/2 -translate-y-1/2 w-40 h-20 bg-slate-800 border-2 border-cyan-600/50 rounded flex items-center justify-around text-cyan-400 z-10 shadow-lg p-2">
                   <div className="flex flex-col items-center">
                     <Icon name="Droplets" size={16} className="mb-1 text-blue-400" />
@@ -174,7 +174,7 @@
                   <div className="absolute -top-3 right-2 bg-slate-700 text-slate-300 text-[8px] px-2 py-0.5 rounded border border-slate-600">熱交換核心</div>
                 </div>
 
-                {/* AI 機櫃群 (White Space) */}
+                {/* AI 機櫃群 */}
                 {[45, 60, 75].map((left, idx) => (
                   <div key={`r1-${idx}`} className="absolute top-[60%] -translate-x-1/2 -translate-y-1/2 w-16 h-24 bg-[#1e293b] border border-slate-600 rounded flex flex-col items-center justify-center text-slate-400 z-10 shadow-xl" style={{left: `${left}%`}}>
                     <Icon name="Server" size={20} className="mb-1" />
@@ -198,7 +198,7 @@
                     <filter id="glow-yellow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
                   </defs>
 
-                  {/* 1. 冷卻管路系統 */}
+                  {/* 1. 冷卻管路 */}
                   {(activeSystem === 'all' || activeSystem === 'cooling') && (
                     <g>
                       <path d="M 1472 630 L 1472 850 L 80 850 L 80 495 L 180 495" stroke="#1e3a8a" strokeWidth="12" fill="none" opacity="0.5" strokeLinejoin="round" />
@@ -234,7 +234,7 @@
                     </g>
                   )}
 
-                  {/* 2. 電力系統路徑 */}
+                  {/* 2. 電力系統 */}
                   {(activeSystem === 'all' || activeSystem === 'power') && (
                     <g>
                       <path d="M 1472 150 L 1472 60 L 200 60 L 200 110" stroke="#422006" strokeWidth="10" fill="none" strokeLinejoin="round" />
@@ -259,7 +259,7 @@
                     </g>
                   )}
 
-                  {/* 3. LDS 漏水偵測 */}
+                  {/* 3. LDS */}
                   {(activeSystem === 'all' || activeSystem === 'safety') && (
                     <g>
                       <path d="M 300 735 L 415 735 L 415 465 L 1200 465" stroke="#ef4444" strokeWidth="2" strokeDasharray="4 4" fill="none" strokeLinejoin="round" className="glow-red animate-pulse" />
@@ -274,6 +274,7 @@
               {/* 面試實戰：核心工程觀念圖解區 */}
               <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
                 
+                {/* 原有區塊：系統佈局重點 */}
                 <div className="bg-white p-6 rounded-2xl shadow-md border border-slate-200">
                   <h4 className="text-xl font-black text-slate-800 border-b-2 border-slate-200 pb-3 mb-5 flex items-center gap-2">
                     <Icon name="Settings" className="text-slate-500" /> 空間與管線佈局重點
@@ -304,6 +305,7 @@
                   </div>
                 </div>
 
+                {/* 原有區塊：PCW vs TCS 物理隔離 */}
                 <div className="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700 flex flex-col justify-between">
                   <div>
                     <h4 className="text-xl font-black text-white border-b-2 border-slate-600 pb-3 mb-5 flex items-center gap-2">
@@ -345,6 +347,94 @@
                 </div>
 
               </section>
+
+              {/* ==================================================================== */}
+              {/* === 新增區塊：架構對決 (傳統廠房 vs 貨櫃模組化) === */}
+              {/* ==================================================================== */}
+              <section className="mt-6">
+                <h3 className="text-2xl font-black text-slate-900 border-b-2 border-slate-300 pb-3 mb-6 flex items-center gap-2">
+                  <Icon name="Scale" className="text-indigo-600" size={28} /> 架構對決：傳統廠房型 vs 貨櫃式/模組化 (Modular AIDC)
+                </h3>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  
+                  {/* 傳統廠房型 (Traditional Stick-Built) */}
+                  <div className="bg-white rounded-2xl shadow-md border-t-8 border-indigo-600 overflow-hidden">
+                    <div className="p-6 bg-slate-50 border-b border-slate-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="bg-indigo-100 p-2 rounded-lg">
+                          <Icon name="Building2" className="text-indigo-700" size={28} />
+                        </div>
+                        <h4 className="text-xl font-bold text-slate-800">傳統廠房型 (Stick-Built)</h4>
+                      </div>
+                      <p className="text-sm text-slate-500">實體土建工程，基礎設施依賴現場放樣、配管與施工，為目前多數大型資料中心的標準作法。</p>
+                    </div>
+                    
+                    <div className="p-6 space-y-6">
+                      <div>
+                        <h5 className="text-sm font-bold text-emerald-600 flex items-center gap-2 mb-3">
+                          <Icon name="CheckCircle2" size={18} /> 主要優勢 (Pros)
+                        </h5>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>超大規模擴充性：</strong> 適合百兆瓦 (100MW+) 等級的單一園區，能極大化規模經濟。</li>
+                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>維修與操作空間：</strong> 灰區與白區的走道淨空較大，便於工程師進行大型設備(如CDU、冰機)的維修與抽換。</li>
+                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>長效期 PUE 表現：</strong> 若初始建築通風與散熱設計優良，長期營運的整體能源效率通常較佳。</li>
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-sm font-bold text-rose-600 flex items-center gap-2 mb-3">
+                          <Icon name="XCircle" size={18} /> 主要挑戰 (Cons)
+                        </h5>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>建置週期極長：</strong> 從整地、土建、機電拉線到完工，通常需要 <strong>18 到 36 個月</strong>，難以趕上當前 AI 算力爆發的速度。</li>
+                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>現場施工變數高：</strong> 大量管線需在現場焊接、防漏測試，高度依賴工人技術，施工品質控制成本高。</li>
+                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>沉沒資本高：</strong> 初期土建資本支出 (CAPEX) 龐大，且建築落成後難以輕易移動。</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 貨櫃/模組化 (Modular / Containerized) */}
+                  <div className="bg-white rounded-2xl shadow-md border-t-8 border-teal-500 overflow-hidden">
+                    <div className="p-6 bg-slate-50 border-b border-slate-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="bg-teal-100 p-2 rounded-lg">
+                          <Icon name="Box" className="text-teal-700" size={28} />
+                        </div>
+                        <h4 className="text-xl font-bold text-slate-800">貨櫃式/模組化 (Modular)</h4>
+                      </div>
+                      <p className="text-sm text-slate-500">將 IT 機櫃、CDU、配電盤預先在工廠組裝於貨櫃中，運至現場直接「隨插即用」。</p>
+                    </div>
+                    
+                    <div className="p-6 space-y-6">
+                      <div>
+                        <h5 className="text-sm font-bold text-emerald-600 flex items-center gap-2 mb-3">
+                          <Icon name="CheckCircle2" size={18} /> 主要優勢 (Pros)
+                        </h5>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>光速部署 (Time-to-Market)：</strong> 工廠製造與現場整地並行，建置週期可壓縮至 <strong>6 到 12 個月</strong>。</li>
+                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>工廠級品質管控：</strong> 水路管線的焊接與防漏測試全在無塵工廠環境內完成，標準化與良率極高。</li>
+                          <li className="flex gap-2 items-start"><span className="text-emerald-500 font-bold">✔</span> <strong>隨需擴容 (Pay-as-you-grow)：</strong> 算力需求增加時，只需拉新的貨櫃並聯水電即可，適合邊緣計算 (Edge Computing) 或分散式部署。</li>
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-sm font-bold text-rose-600 flex items-center gap-2 mb-3">
+                          <Icon name="XCircle" size={18} /> 主要挑戰 (Cons)
+                        </h5>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>空間與維修受限：</strong> 貨櫃內部走道狹窄，伺服器抽換、管路查修的操作空間遠不如傳統廠房舒適。</li>
+                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>高度依賴外部環境：</strong> 若放置於戶外，需額外考量極端氣候（高溫、嚴寒、鹽害）對金屬外殼與散熱能力的影響。</li>
+                          <li className="flex gap-2 items-start"><span className="text-rose-500 font-bold">✘</span> <strong>客製化彈性低：</strong> 受限於貨櫃的標準物理尺寸，未來若有非標準規格的新型 AI 機櫃，較難直接相容。</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
             </div>
           );
         };
